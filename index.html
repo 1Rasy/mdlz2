@@ -1,0 +1,76 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MONDELĒZ 商品目录</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="logo">MONDELĒZ</div>
+
+  <input type="text" id="searchInput" placeholder="搜索商品">
+
+  <div class="category-bar">
+    <button class="category-btn active" data-category="全部">全部</button>
+    <button class="category-btn" data-category="口香糖">口香糖</button>
+    <button class="category-btn" data-category="饼干">饼干</button>
+    <button class="category-btn" data-category="糖果">糖果</button>
+  </div>
+</header>
+
+<main class="product-grid" id="productGrid"></main>
+
+<div class="cart-floating" id="cartButton">
+  意愿单（<span id="cartCount">0</span>）
+</div>
+
+<div class="modal hidden" id="productModal">
+  <div class="modal-content">
+
+    <div class="modal-header">
+      <button id="closeModal">×</button>
+    </div>
+
+    <img id="modalImage" class="modal-image">
+
+    <div class="modal-body">
+      <h2 id="modalTitle"></h2>
+
+      <div class="section-title">选择规格</div>
+
+      <div id="variantContainer"></div>
+
+      <button class="add-cart-btn" id="addToCartBtn">
+        加入意愿单
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<div class="drawer hidden" id="cartDrawer">
+  <div class="drawer-content">
+
+    <div class="drawer-header">
+      <h2>意愿单</h2>
+      <button id="closeDrawer">×</button>
+    </div>
+
+    <div id="cartItems"></div>
+
+    <button class="copy-btn" id="copyCart">
+      复制清单发送给业务员
+    </button>
+
+  </div>
+</div>
+
+<script src="products.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>
