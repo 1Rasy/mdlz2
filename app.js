@@ -16,7 +16,28 @@ const cartCount = document.getElementById("cartCount");
 let currentCategory = "全部";
 let currentProduct = null;
 let selectedVariant = null;
+let selectedQuantity = 1;
 let cart = [];
+
+const STORAGE_KEY = "mdlz_cart";
+
+// 从本地存储加载购物车数据
+function loadCartFromStorage() {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved) {
+    try {
+      cart = JSON.parse(saved);
+      updateCart();
+    } catch (e) {
+      console.error("Failed to load cart from storage:", e);
+    }
+  }
+}
+
+// 保存购物车数据到本地存储
+function saveCartToStorage() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+}
 
 function renderProducts() {
 
@@ -76,6 +97,7 @@ function renderProducts() {
 }
 
 renderProducts();
+loadCartFromStorage();
 
 searchInput.addEventListener("input", renderProducts);
 
@@ -119,6 +141,8 @@ function openProduct(id) {
   });
 
   selectedVariant = currentProduct.variants[0];
+  selectedQuantity = 1;
+  document.getElementById("quantityInput").value = 1;
 
   modal.classList.remove("hidden");
 }
@@ -137,6 +161,31 @@ function selectVariant(index) {
   modalImage.src = selectedVariant.image;
 }
 
+// 数量控制
+document.getElementById("decreaseQty").addEventListener("click", () => {
+  const input = document.getElementById("quantityInput");
+  if (parseInt(input.value) > 1) {
+    input.value = parseInt(input.value) - 1;
+    selectedQuantity = parseInt(input.value);
+  }
+});
+
+document.getElementById("increaseQty").addEventListener("click", () => {
+  const input = document.getElementById("quantityInput");
+  input.value = parseInt(input.value) + 1;
+  selectedQuantity = parseInt(input.value);
+});
+
+document.getElementById("quantityInput").addEventListener("change", () => {
+  const input = document.getElementById("quantityInput");
+  let value = parseInt(input.value);
+  if (isNaN(value) || value < 1) {
+    value = 1;
+  }
+  input.value = value;
+  selectedQuantity = value;
+});
+
 document.getElementById("closeModal")
   .addEventListener("click", () => {
     modal.classList.add("hidden");
@@ -145,12 +194,17 @@ document.getElementById("closeModal")
 document.getElementById("addToCartBtn")
   .addEventListener("click", () => {
 
-    cart.push({
-      product: currentProduct.name,
-      flavor: selectedVariant.flavor,
-      spec: selectedVariant.spec
-    });
+    for (let i = 0; i < selectedQuantity; i++) {
+      cart.push({
+        product: currentProduct.name,
+        flavor: selectedVariant.flavor,
+        spec: selectedVariant.spec,
+        price: selectedVariant.price,
+        id: Date.now() + Math.random() // 为每个项生成唯一ID
+      });
+    }
 
+    saveCartToStorage();
     updateCart();
 
     modal.classList.add("hidden");
@@ -162,22 +216,92 @@ function updateCart() {
 
   cartItems.innerHTML = "";
 
-  cart.forEach(item => {
+  if (cart.length === 0) {
+    cartItems.innerHTML = '<div style="padding: 20px; text-align: center; color: #999;">意愿单是空的</div>';
+    return;
+  }
 
+  // 合并相同的商品
+  const itemMap = {};
+  
+  cart.forEach(item => {
+    const key = `${item.product}_${item.flavor}_${item.spec}`;
+    if (!itemMap[key]) {
+      itemMap[key] = {
+        product: item.product,
+        flavor: item.flavor,
+        spec: item.spec,
+        price: item.price,
+        quantity: 0,
+        items: []
+      };
+    }
+    itemMap[key].quantity++;
+    itemMap[key].items.push(item.id);
+  });
+
+  Object.values(itemMap).forEach(group => {
     cartItems.innerHTML += `
       <div class="cart-item">
 
         <div class="cart-item-title">
-          ${item.product}
+          ${group.product}
         </div>
 
         <div class="cart-item-sub">
-          ${item.flavor} ｜ ${item.spec}
+          ${group.flavor} ｜ ${group.spec}
+        </div>
+
+        <div class="cart-item-price">
+          ${group.price} × ${group.quantity}
+        </div>
+
+        <div class="cart-item-controls">
+          <button class="cart-item-btn" onclick="decreaseItemQuantity('${group.product}', '${group.flavor}', '${group.spec}')">−</button>
+          <span class="cart-item-qty">${group.quantity}</span>
+          <button class="cart-item-btn" onclick="increaseItemQuantity('${group.product}', '${group.flavor}', '${group.spec}')">+</button>
+          <button class="cart-item-delete" onclick="removeItem('${group.product}', '${group.flavor}', '${group.spec}')">删除</button>
         </div>
 
       </div>
     `;
   });
+}
+
+function increaseItemQuantity(product, flavor, spec) {
+  const item = cart.find(
+    i => i.product === product && i.flavor === flavor && i.spec === spec
+  );
+  if (item) {
+    cart.push({
+      product: item.product,
+      flavor: item.flavor,
+      spec: item.spec,
+      price: item.price,
+      id: Date.now() + Math.random()
+    });
+    saveCartToStorage();
+    updateCart();
+  }
+}
+
+function decreaseItemQuantity(product, flavor, spec) {
+  const index = cart.findIndex(
+    i => i.product === product && i.flavor === flavor && i.spec === spec
+  );
+  if (index > -1) {
+    cart.splice(index, 1);
+    saveCartToStorage();
+    updateCart();
+  }
+}
+
+function removeItem(product, flavor, spec) {
+  cart = cart.filter(
+    i => !(i.product === product && i.flavor === flavor && i.spec === spec)
+  );
+  saveCartToStorage();
+  updateCart();
 }
 
 cartButton.addEventListener("click", () => {
@@ -189,11 +313,45 @@ document.getElementById("closeDrawer")
     cartDrawer.classList.add("hidden");
   });
 
+document.getElementById("clearCart")
+  .addEventListener("click", () => {
+    if (cart.length === 0) {
+      alert("意愿单已经是空的");
+      return;
+    }
+    if (confirm("确定要清空所有意愿单吗？")) {
+      cart = [];
+      saveCartToStorage();
+      updateCart();
+    }
+  });
+
 document.getElementById("copyCart")
   .addEventListener("click", async () => {
 
-    const text = cart.map(item =>
-      `${item.product} ${item.flavor} ${item.spec}`
+    if (cart.length === 0) {
+      alert("意愿单是空的，没有可复制的内容");
+      return;
+    }
+
+    // 合并相同的商品
+    const itemMap = {};
+    
+    cart.forEach(item => {
+      const key = `${item.product}_${item.flavor}_${item.spec}`;
+      if (!itemMap[key]) {
+        itemMap[key] = {
+          product: item.product,
+          flavor: item.flavor,
+          spec: item.spec,
+          quantity: 0
+        };
+      }
+      itemMap[key].quantity++;
+    });
+
+    const text = Object.values(itemMap).map(item =>
+      `${item.product} ${item.flavor} ${item.spec} × ${item.quantity}`
     ).join("\n");
 
     await navigator.clipboard.writeText(text);
