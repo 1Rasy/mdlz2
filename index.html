@@ -1,79 +1,83 @@
-
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MONDELĒZ 商品目录</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+      <div class="cart-item">
 
-<header class="topbar">
-  <div class="logo">MONDELĒZ</div>
+        <div class="cart-title">
+          ${item.name}
+        </div>
 
-  <input type="text" id="searchInput" placeholder="搜索商品">
+        <div class="cart-sub">
+          ${item.flavor} ｜ ${item.spec}
+        </div>
 
-  <div class="category-bar">
-    <button class="category-btn active" data-category="全部">全部</button>
-    <button class="category-btn" data-category="口香糖">口香糖</button>
-    <button class="category-btn" data-category="饼干">饼干</button>
-    <button class="category-btn" data-category="糖果">糖果</button>
-  </div>
-</header>
+        <div class="cart-qty">
+          ¥${item.price} × ${item.quantity}
+        </div>
 
-<main class="product-grid" id="productGrid"></main>
+      </div>
+    `;
+  });
+}
 
-<div class="cart-floating" id="cartButton">
-  意愿单（<span id="cartCount">0</span>）
-</div>
+document.getElementById("addToCartBtn")
+.addEventListener("click",()=>{
 
-<div class="modal hidden" id="productModal">
-  <div class="modal-content">
+  currentProduct.variants.forEach(variant=>{
 
-    <div class="modal-header">
-      <button id="closeModal">×</button>
-    </div>
+    const qty = selectedQuantities[variant.skuId];
 
-    <img id="modalImage" class="modal-image">
+    if(qty > 0){
 
-    <div class="modal-body">
-      <h2 id="modalTitle"></h2>
+      const exist = cart.find(item=>
+        item.skuId === variant.skuId
+      );
 
-      <div class="section-title">选择规格和数量</div>
+      if(exist){
+        exist.quantity += qty;
+      }else{
+        cart.push({
+          skuId:variant.skuId,
+          name:currentProduct.name,
+          flavor:variant.flavor,
+          spec:variant.spec,
+          price:variant.price,
+          quantity:qty
+        });
+      }
+    }
+  });
 
-      <div id="variantContainer"></div>
+  saveCart();
+  renderCart();
 
-      <button class="add-cart-btn" id="addToCartBtn">
-        加入意愿单
-      </button>
-    </div>
+  modal.classList.add("hidden");
+});
 
-  </div>
-</div>
+cartButton.addEventListener("click",()=>{
+  cartDrawer.classList.remove("hidden");
+});
 
-<div class="drawer hidden" id="cartDrawer">
-  <div class="drawer-content">
+document.getElementById("closeDrawer")
+.addEventListener("click",()=>{
+  cartDrawer.classList.add("hidden");
+});
 
-    <div class="drawer-header">
-      <h2>意愿单</h2>
-      <button id="closeDrawer">×</button>
-    </div>
+document.getElementById("closeModal")
+.addEventListener("click",()=>{
+  modal.classList.add("hidden");
+});
 
-    <div id="cartItems"></div>
+document.getElementById("copyCart")
+.addEventListener("click",async()=>{
 
-    <div class="drawer-footer">
-      <button class="clear-btn" id="clearCart">清空意愿单</button>
-      <button class="copy-btn" id="copyCart">
-        复制清单发送给业务员
-      </button>
-    </div>
+  const text = cart.map(item=>
+    `${item.name} ${item.flavor} ${item.spec} × ${item.quantity}`
+  ).join("\n");
 
-  </div>
-</div>
+  await navigator.clipboard.writeText(text);
 
-<script src="products.js"></script>
-<script src="app.js"></script>
+  alert("已复制意愿单");
+});
+</script>
 
 </body>
 </html>
