@@ -192,8 +192,8 @@ body{
 
 .modal-image{
   width:100%;
-  aspect-ratio:1/1;
-  object-fit:cover;
+  max-height:35vh;
+  object-fit:contain;
   background:#eee;
 }
 
