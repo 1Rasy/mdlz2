@@ -16,7 +16,7 @@ const cartCount = document.getElementById("cartCount");
 let currentCategory = "全部";
 let currentProduct = null;
 let selectedVariant = null;
-let selectedQuantity = 1;
+let variantQuantities = {}; // 记录每个规格的数量
 let cart = [];
 
 const STORAGE_KEY = "mdlz_cart";
@@ -126,31 +126,36 @@ function openProduct(id) {
   modalTitle.innerText = currentProduct.name;
 
   variantContainer.innerHTML = "";
+  variantQuantities = {};
 
   currentProduct.variants.forEach((variant, index) => {
 
+    const key = `variant-${id}-${index}`;
+    variantQuantities[key] = 1;
+
     variantContainer.innerHTML += `
-      <button
-        class="variant-btn ${index === 0 ? "active" : ""}"
-        onclick="selectVariant(${index})"
-        id="variant-${index}"
-      >
-        ${variant.flavor} ｜ ${variant.spec} ｜ ${variant.price}
-      </button>
+      <div class="variant-item ${index === 0 ? "active" : ""}" onclick="selectVariant(${index}, '${key}')" id="variant-${index}">
+        <div class="variant-info">
+          ${variant.flavor} ｜ ${variant.spec} ｜ ${variant.price}
+        </div>
+        <div class="variant-quantity">
+          <button class="qty-btn-small" onclick="decreaseVariantQty('${key}', event)">−</button>
+          <span class="qty-display" id="qty-${key}">1</span>
+          <button class="qty-btn-small" onclick="increaseVariantQty('${key}', event)">+</button>
+        </div>
+      </div>
     `;
   });
 
   selectedVariant = currentProduct.variants[0];
-  selectedQuantity = 1;
-  document.getElementById("quantityInput").value = 1;
 
   modal.classList.remove("hidden");
 }
 
-function selectVariant(index) {
+function selectVariant(index, key) {
 
-  document.querySelectorAll(".variant-btn")
-    .forEach(btn => btn.classList.remove("active"));
+  document.querySelectorAll(".variant-item")
+    .forEach(item => item.classList.remove("active"));
 
   document.getElementById(`variant-${index}`)
     .classList.add("active");
@@ -161,30 +166,19 @@ function selectVariant(index) {
   modalImage.src = selectedVariant.image;
 }
 
-// 数量控制
-document.getElementById("decreaseQty").addEventListener("click", () => {
-  const input = document.getElementById("quantityInput");
-  if (parseInt(input.value) > 1) {
-    input.value = parseInt(input.value) - 1;
-    selectedQuantity = parseInt(input.value);
-  }
-});
+function increaseVariantQty(key, event) {
+  event.stopPropagation();
+  variantQuantities[key]++;
+  document.getElementById(`qty-${key}`).innerText = variantQuantities[key];
+}
 
-document.getElementById("increaseQty").addEventListener("click", () => {
-  const input = document.getElementById("quantityInput");
-  input.value = parseInt(input.value) + 1;
-  selectedQuantity = parseInt(input.value);
-});
-
-document.getElementById("quantityInput").addEventListener("change", () => {
-  const input = document.getElementById("quantityInput");
-  let value = parseInt(input.value);
-  if (isNaN(value) || value < 1) {
-    value = 1;
+function decreaseVariantQty(key, event) {
+  event.stopPropagation();
+  if (variantQuantities[key] > 1) {
+    variantQuantities[key]--;
+    document.getElementById(`qty-${key}`).innerText = variantQuantities[key];
   }
-  input.value = value;
-  selectedQuantity = value;
-});
+}
 
 document.getElementById("closeModal")
   .addEventListener("click", () => {
@@ -194,13 +188,22 @@ document.getElementById("closeModal")
 document.getElementById("addToCartBtn")
   .addEventListener("click", () => {
 
-    for (let i = 0; i < selectedQuantity; i++) {
+    // 找到被选中的规格
+    const activeVariant = document.querySelector(".variant-item.active");
+    if (!activeVariant) return;
+
+    // 获取该规格的数量
+    const qtySpan = activeVariant.querySelector(".qty-display");
+    const quantity = parseInt(qtySpan.innerText);
+
+    // 添加到购物车
+    for (let i = 0; i < quantity; i++) {
       cart.push({
         product: currentProduct.name,
         flavor: selectedVariant.flavor,
         spec: selectedVariant.spec,
         price: selectedVariant.price,
-        id: Date.now() + Math.random() // 为每个项生成唯一ID
+        id: Date.now() + Math.random()
       });
     }
 
