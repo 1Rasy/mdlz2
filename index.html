@@ -1,4 +1,485 @@
 <!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MONDELĒZ 商品目录</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:"PingFang SC",sans-serif;
+  background:#f5f6f8;
+  color:#222;
+  padding-bottom:120px;
+}
+
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:100;
+  background:white;
+  padding:18px 16px 12px;
+  border-bottom:1px solid #eee;
+}
+
+.logo{
+  font-size:24px;
+  font-weight:700;
+  color:#4B2E83;
+  margin-bottom:14px;
+}
+
+#searchInput{
+  width:100%;
+  border:none;
+  background:#f2f3f5;
+  padding:14px;
+  border-radius:16px;
+  outline:none;
+  font-size:15px;
+}
+
+.category-bar{
+  display:flex;
+  gap:10px;
+  margin-top:14px;
+  overflow:auto;
+}
+
+.category-btn{
+  border:none;
+  background:#f2f3f5;
+  padding:10px 16px;
+  border-radius:999px;
+  cursor:pointer;
+}
+
+.category-btn.active{
+  background:#4B2E83;
+  color:white;
+}
+
+.product-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:16px;
+  padding:16px;
+}
+
+.card{
+  background:white;
+  border-radius:22px;
+  overflow:hidden;
+  box-shadow:0 2px 12px rgba(0,0,0,0.05);
+}
+
+.card img{
+  width:100%;
+  aspect-ratio:1/1;
+  object-fit:cover;
+}
+
+.card-body{
+  padding:14px;
+}
+
+.card-title{
+  font-size:15px;
+  font-weight:600;
+  line-height:1.4;
+}
+
+.card-sub{
+  color:#888;
+  font-size:13px;
+  margin-top:6px;
+}
+
+.price{
+  font-size:24px;
+  font-weight:700;
+  margin-top:10px;
+}
+
+.open-btn{
+  width:100%;
+  margin-top:14px;
+  border:none;
+  background:#4B2E83;
+  color:white;
+  padding:12px;
+  border-radius:14px;
+  cursor:pointer;
+}
+
+.cart-floating{
+  position:fixed;
+  right:18px;
+  bottom:20px;
+  background:#4B2E83;
+  color:white;
+  padding:14px 18px;
+  border-radius:999px;
+  cursor:pointer;
+  z-index:1000;
+}
+
+.modal,
+.drawer{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.4);
+  z-index:999;
+}
+
+.hidden{
+  display:none;
+}
+
+.modal-content,
+.drawer-content{
+  background:white;
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  border-radius:24px 24px 0 0;
+  max-height:90vh;
+  overflow:auto;
+}
+
+.modal-header,
+.drawer-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:18px;
+}
+
+.modal-header button,
+.drawer-header button{
+  border:none;
+  background:none;
+  font-size:28px;
+  cursor:pointer;
+}
+
+.modal-image{
+  width:100%;
+  max-height:36vh;
+  object-fit:contain;
+  background:white;
+}
+
+.modal-body{
+  padding:20px;
+}
+
+.variant-item{
+  border:1px solid #ddd;
+  border-radius:16px;
+  padding:14px;
+  margin-top:12px;
+}
+
+.variant-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+}
+
+.variant-name{
+  font-size:14px;
+  flex:1;
+}
+
+.qty-box{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.qty-btn{
+  width:32px;
+  height:32px;
+  border:none;
+  background:#f2f3f5;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+.add-cart-btn,
+.copy-btn{
+  width:100%;
+  margin-top:20px;
+  border:none;
+  background:#4B2E83;
+  color:white;
+  padding:16px;
+  border-radius:16px;
+  cursor:pointer;
+  font-size:15px;
+}
+
+.cart-item{
+  padding:18px;
+  border-bottom:1px solid #eee;
+}
+
+.cart-title{
+  font-weight:600;
+}
+
+.cart-sub{
+  color:#666;
+  font-size:14px;
+  margin-top:6px;
+}
+
+.cart-qty{
+  color:#4B2E83;
+  font-weight:700;
+  margin-top:10px;
+}
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+
+  <div class="logo">MONDELĒZ</div>
+
+  <input type="text" id="searchInput" placeholder="搜索商品">
+
+  <div class="category-bar">
+    <button class="category-btn active" data-category="全部">全部</button>
+    <button class="category-btn" data-category="饼干">饼干</button>
+    <button class="category-btn" data-category="口香糖">口香糖</button>
+  </div>
+
+</header>
+
+<main class="product-grid" id="productGrid"></main>
+
+<div class="cart-floating" id="cartButton">
+  意愿单（<span id="cartCount">0</span>）
+</div>
+
+<div class="modal hidden" id="productModal">
+
+  <div class="modal-content">
+
+    <div class="modal-header">
+      <h3 id="modalTitle"></h3>
+      <button id="closeModal">×</button>
+    </div>
+
+    <img id="modalImage" class="modal-image">
+
+    <div class="modal-body">
+
+      <div id="variantContainer"></div>
+
+      <button class="add-cart-btn" id="addToCartBtn">
+        加入意愿单（0件）
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<div class="drawer hidden" id="cartDrawer">
+
+  <div class="drawer-content">
+
+    <div class="drawer-header">
+      <h2>意愿单</h2>
+      <button id="closeDrawer">×</button>
+    </div>
+
+    <div id="cartItems"></div>
+
+    <div style="padding:20px;">
+      <button class="copy-btn" id="copyCart">
+        复制意愿单
+      </button>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+const products = [
+
+  {
+    id:1,
+    name:"奥利奥夹心饼干",
+    category:"饼干",
+    image:"images/1.jpg",
+
+    variants:[
+      {
+        skuId:"oreo1",
+        flavor:"原味",
+        spec:"97g",
+        price:4.8,
+        image:"images/1.jpg"
+      },
+
+      {
+        skuId:"oreo2",
+        flavor:"草莓味",
+        spec:"97g",
+        price:5.2,
+        image:"images/2.jpg"
+      }
+    ]
+  },
+
+  {
+    id:2,
+    name:"炫迈口香糖",
+    category:"口香糖",
+    image:"images/5.jpg",
+
+    variants:[
+      {
+        skuId:"xm1",
+        flavor:"薄荷味",
+        spec:"35粒",
+        price:7.5,
+        image:"images/6.jpg"
+      }
+    ]
+  }
+
+];
+
+const grid = document.getElementById("productGrid");
+const searchInput = document.getElementById("searchInput");
+const categoryButtons = document.querySelectorAll(".category-btn");
+
+const modal = document.getElementById("productModal");
+const modalImage = document.getElementById("modalImage");
+const modalTitle = document.getElementById("modalTitle");
+const variantContainer = document.getElementById("variantContainer");
+
+const cartButton = document.getElementById("cartButton");
+const cartDrawer = document.getElementById("cartDrawer");
+const cartItems = document.getElementById("cartItems");
+const cartCount = document.getElementById("cartCount");
+
+let currentCategory = "全部";
+let currentProduct = null;
+let selectedQuantities = {};
+
+let cart = JSON.parse(
+  localStorage.getItem("mdlz_cart") || "[]"
+);
+
+function saveCart(){
+  localStorage.setItem(
+    "mdlz_cart",
+    JSON.stringify(cart)
+  );
+}
+
+function renderProducts(){
+
+  const keyword =
+    searchInput.value.toLowerCase();
+
+  const filtered = products.filter(product=>{
+
+    const matchKeyword =
+      product.name.toLowerCase().includes(keyword);
+
+    const matchCategory =
+      currentCategory === "全部" ||
+      product.category === currentCategory;
+
+    return matchKeyword && matchCategory;
+  });
+
+  grid.innerHTML = "";
+
+  filtered.forEach(product=>{
+
+    grid.innerHTML += `
+      <div class="card">
+
+        <img src="${product.image}">
+
+        <div class="card-body">
+
+          <div class="card-title">
+            ${product.name}
+          </div>
+
+          <div class="card-sub">
+            ${product.variants.length} 个规格
+          </div>
+
+          <div class="price">
+            ¥${product.variants[0].price}
+          </div>
+
+          <button
+            class="open-btn"
+            onclick="openProduct(${product.id})"
+          >
+            查看商品
+          </button>
+
+        </div>
+
+      </div>
+    `;
+  });
+}
+
+function renderCart(){
+
+  let total = 0;
+
+  cart.forEach(item=>{
+    total += item.quantity;
+  });
+
+  cartCount.innerText = total;
+
+  cartItems.innerHTML = "";
+
+  if(cart.length === 0){
+
+    cartItems.innerHTML = `
+      <div style="
+        padding:30px;
+        text-align:center;
+        color:#999;
+      ">
+        意愿单为空
+      </div>
+    `;
+
+    return;
+  }
+
+  cart.forEach(item=>{
+
+    cartItems.innerHTML += `
       <div class="cart-item">
 
         <div class="cart-title">
@@ -18,22 +499,129 @@
   });
 }
 
+function openProduct(id){
+
+  currentProduct =
+    products.find(p=>p.id===id);
+
+  modalTitle.innerText =
+    currentProduct.name;
+
+  modalImage.src =
+    currentProduct.image;
+
+  selectedQuantities = {};
+
+  variantContainer.innerHTML = "";
+
+  currentProduct.variants.forEach(variant=>{
+
+    selectedQuantities[variant.skuId] = 0;
+
+    variantContainer.innerHTML += `
+      <div class="variant-item">
+
+        <div class="variant-top">
+
+          <div class="variant-name">
+            ${variant.flavor}
+            ｜ ${variant.spec}
+            ｜ ¥${variant.price}
+          </div>
+
+          <div class="qty-box">
+
+            <button
+              class="qty-btn"
+              onclick="changeQty('${variant.skuId}',-1)"
+            >
+              -
+            </button>
+
+            <span id="qty-${variant.skuId}">
+              0
+            </span>
+
+            <button
+              class="qty-btn"
+              onclick="changeQty('${variant.skuId}',1)"
+            >
+              +
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+    `;
+  });
+
+  updateAddButton();
+
+  modal.classList.remove("hidden");
+}
+
+function changeQty(skuId,delta){
+
+  selectedQuantities[skuId] += delta;
+
+  if(selectedQuantities[skuId] < 0){
+    selectedQuantities[skuId] = 0;
+  }
+
+  document.getElementById(
+    `qty-${skuId}`
+  ).innerText =
+    selectedQuantities[skuId];
+
+  const variant =
+    currentProduct.variants.find(
+      v=>v.skuId===skuId
+    );
+
+  if(variant){
+    modalImage.src = variant.image;
+  }
+
+  updateAddButton();
+}
+
+function updateAddButton(){
+
+  let total = 0;
+
+  Object.values(selectedQuantities)
+  .forEach(q=>{
+    total += q;
+  });
+
+  document.getElementById(
+    "addToCartBtn"
+  ).innerText =
+    `加入意愿单（${total}件）`;
+}
+
 document.getElementById("addToCartBtn")
 .addEventListener("click",()=>{
 
   currentProduct.variants.forEach(variant=>{
 
-    const qty = selectedQuantities[variant.skuId];
+    const qty =
+      selectedQuantities[variant.skuId];
 
     if(qty > 0){
 
-      const exist = cart.find(item=>
-        item.skuId === variant.skuId
+      const exist = cart.find(
+        item=>item.skuId===variant.skuId
       );
 
       if(exist){
+
         exist.quantity += qty;
+
       }else{
+
         cart.push({
           skuId:variant.skuId,
           name:currentProduct.name,
@@ -42,8 +630,11 @@ document.getElementById("addToCartBtn")
           price:variant.price,
           quantity:qty
         });
+
       }
+
     }
+
   });
 
   saveCart();
@@ -52,31 +643,67 @@ document.getElementById("addToCartBtn")
   modal.classList.add("hidden");
 });
 
+searchInput.addEventListener(
+  "input",
+  renderProducts
+);
+
+categoryButtons.forEach(btn=>{
+
+  btn.addEventListener("click",()=>{
+
+    categoryButtons.forEach(b=>{
+      b.classList.remove("active");
+    });
+
+    btn.classList.add("active");
+
+    currentCategory =
+      btn.dataset.category;
+
+    renderProducts();
+  });
+
+});
+
 cartButton.addEventListener("click",()=>{
+
   cartDrawer.classList.remove("hidden");
+
 });
 
 document.getElementById("closeDrawer")
 .addEventListener("click",()=>{
+
   cartDrawer.classList.add("hidden");
+
 });
 
 document.getElementById("closeModal")
 .addEventListener("click",()=>{
+
   modal.classList.add("hidden");
+
 });
 
 document.getElementById("copyCart")
 .addEventListener("click",async()=>{
 
-  const text = cart.map(item=>
-    `${item.name} ${item.flavor} ${item.spec} × ${item.quantity}`
-  ).join("\n");
+  const text = cart.map(item=>{
+
+    return `${item.name} ${item.flavor} ${item.spec} × ${item.quantity}`;
+
+  }).join("\n");
 
   await navigator.clipboard.writeText(text);
 
   alert("已复制意愿单");
+
 });
+
+renderProducts();
+renderCart();
+
 </script>
 
 </body>
