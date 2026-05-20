@@ -44,6 +44,14 @@
 
       <div id="variantContainer"></div>
 
+      <div class="section-title">选择数量</div>
+
+      <div class="quantity-control">
+        <button class="qty-btn" id="decreaseQty">−</button>
+        <input type="number" id="quantityInput" class="qty-input" value="1" min="1">
+        <button class="qty-btn" id="increaseQty">+</button>
+      </div>
+
       <button class="add-cart-btn" id="addToCartBtn">
         加入意愿单
       </button>
@@ -62,9 +70,12 @@
 
     <div id="cartItems"></div>
 
-    <button class="copy-btn" id="copyCart">
-      复制清单发送给业务员
-    </button>
+    <div class="drawer-footer">
+      <button class="clear-btn" id="clearCart">清空意愿单</button>
+      <button class="copy-btn" id="copyCart">
+        复制清单发送给业务员
+      </button>
+    </div>
 
   </div>
 </div>
