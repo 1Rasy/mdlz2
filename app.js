@@ -132,6 +132,9 @@ function selectVariant(index) {
     .classList.add("active");
 
   selectedVariant = currentProduct.variants[index];
+  
+  // 更新模态框中的图片
+  modalImage.src = selectedVariant.image;
 }
 
 document.getElementById("closeModal")
