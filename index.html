@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>MONDELĒZ 商品目录</title>
 
 <style>
+
 *{
   margin:0;
   padding:0;
@@ -58,6 +60,7 @@ body{
   padding:10px 16px;
   border-radius:999px;
   cursor:pointer;
+  white-space:nowrap;
 }
 
 .category-btn.active{
@@ -128,6 +131,7 @@ body{
   border-radius:999px;
   cursor:pointer;
   z-index:1000;
+  box-shadow:0 4px 16px rgba(0,0,0,0.15);
 }
 
 .modal,
@@ -135,7 +139,7 @@ body{
   position:fixed;
   inset:0;
   background:rgba(0,0,0,0.4);
-  z-index:999;
+  z-index:9999;
 }
 
 .hidden{
@@ -160,6 +164,7 @@ body{
   justify-content:space-between;
   align-items:center;
   padding:18px;
+  border-bottom:1px solid #eee;
 }
 
 .modal-header button,
@@ -213,6 +218,13 @@ body{
   background:#f2f3f5;
   border-radius:8px;
   cursor:pointer;
+  font-size:18px;
+}
+
+.qty-number{
+  min-width:20px;
+  text-align:center;
+  font-weight:600;
 }
 
 .add-cart-btn,
@@ -243,11 +255,36 @@ body{
   margin-top:6px;
 }
 
+.cart-bottom{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:12px;
+}
+
 .cart-qty{
   color:#4B2E83;
   font-weight:700;
-  margin-top:10px;
 }
+
+.cart-actions{
+  display:flex;
+  gap:8px;
+}
+
+.cart-btn{
+  border:none;
+  background:#f2f3f5;
+  padding:6px 10px;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+.delete-btn{
+  background:#ffebeb;
+  color:#d33;
+}
+
 </style>
 </head>
 
@@ -257,12 +294,35 @@ body{
 
   <div class="logo">MONDELĒZ</div>
 
-  <input type="text" id="searchInput" placeholder="搜索商品">
+  <input
+    type="text"
+    id="searchInput"
+    placeholder="搜索商品"
+  >
 
   <div class="category-bar">
-    <button class="category-btn active" data-category="全部">全部</button>
-    <button class="category-btn" data-category="饼干">饼干</button>
-    <button class="category-btn" data-category="口香糖">口香糖</button>
+
+    <button
+      class="category-btn active"
+      data-category="全部"
+    >
+      全部
+    </button>
+
+    <button
+      class="category-btn"
+      data-category="饼干"
+    >
+      饼干
+    </button>
+
+    <button
+      class="category-btn"
+      data-category="口香糖"
+    >
+      口香糖
+    </button>
+
   </div>
 
 </header>
@@ -278,18 +338,29 @@ body{
   <div class="modal-content">
 
     <div class="modal-header">
+
       <h3 id="modalTitle"></h3>
-      <button id="closeModal">×</button>
+
+      <button id="closeModal">
+        ×
+      </button>
+
     </div>
 
-    <img id="modalImage" class="modal-image">
+    <img
+      id="modalImage"
+      class="modal-image"
+    >
 
     <div class="modal-body">
 
       <div id="variantContainer"></div>
 
-      <button class="add-cart-btn" id="addToCartBtn">
-        加入意愿单（0件）
+      <button
+        class="add-cart-btn"
+        id="addToCartBtn"
+      >
+        更新意愿单（0件）
       </button>
 
     </div>
@@ -303,16 +374,26 @@ body{
   <div class="drawer-content">
 
     <div class="drawer-header">
+
       <h2>意愿单</h2>
-      <button id="closeDrawer">×</button>
+
+      <button id="closeDrawer">
+        ×
+      </button>
+
     </div>
 
     <div id="cartItems"></div>
 
     <div style="padding:20px;">
-      <button class="copy-btn" id="copyCart">
+
+      <button
+        class="copy-btn"
+        id="copyCart"
+      >
         复制意愿单
       </button>
+
     </div>
 
   </div>
@@ -390,10 +471,12 @@ let cart = JSON.parse(
 );
 
 function saveCart(){
+
   localStorage.setItem(
     "mdlz_cart",
     JSON.stringify(cart)
   );
+
 }
 
 function renderProducts(){
@@ -411,6 +494,7 @@ function renderProducts(){
       product.category === currentCategory;
 
     return matchKeyword && matchCategory;
+
   });
 
   grid.innerHTML = "";
@@ -447,7 +531,9 @@ function renderProducts(){
 
       </div>
     `;
+
   });
+
 }
 
 function renderCart(){
@@ -466,7 +552,7 @@ function renderCart(){
 
     cartItems.innerHTML = `
       <div style="
-        padding:30px;
+        padding:40px;
         text-align:center;
         color:#999;
       ">
@@ -490,13 +576,44 @@ function renderCart(){
           ${item.flavor} ｜ ${item.spec}
         </div>
 
-        <div class="cart-qty">
-          ¥${item.price} × ${item.quantity}
+        <div class="cart-bottom">
+
+          <div class="cart-qty">
+            ¥${item.price} × ${item.quantity}
+          </div>
+
+          <div class="cart-actions">
+
+            <button
+              class="cart-btn"
+              onclick="changeCartQty('${item.skuId}',-1)"
+            >
+              -
+            </button>
+
+            <button
+              class="cart-btn"
+              onclick="changeCartQty('${item.skuId}',1)"
+            >
+              +
+            </button>
+
+            <button
+              class="cart-btn delete-btn"
+              onclick="removeCartItem('${item.skuId}')"
+            >
+              删除
+            </button>
+
+          </div>
+
         </div>
 
       </div>
     `;
+
   });
+
 }
 
 function openProduct(id){
@@ -510,13 +627,18 @@ function openProduct(id){
   modalImage.src =
     currentProduct.image;
 
-  selectedQuantities = {};
-
   variantContainer.innerHTML = "";
+
+  selectedQuantities = {};
 
   currentProduct.variants.forEach(variant=>{
 
-    selectedQuantities[variant.skuId] = 0;
+    const exist = cart.find(
+      item => item.skuId === variant.skuId
+    );
+
+    selectedQuantities[variant.skuId] =
+      exist ? exist.quantity : 0;
 
     variantContainer.innerHTML += `
       <div class="variant-item">
@@ -524,9 +646,11 @@ function openProduct(id){
         <div class="variant-top">
 
           <div class="variant-name">
+
             ${variant.flavor}
             ｜ ${variant.spec}
             ｜ ¥${variant.price}
+
           </div>
 
           <div class="qty-box">
@@ -538,8 +662,11 @@ function openProduct(id){
               -
             </button>
 
-            <span id="qty-${variant.skuId}">
-              0
+            <span
+              class="qty-number"
+              id="qty-${variant.skuId}"
+            >
+              ${selectedQuantities[variant.skuId]}
             </span>
 
             <button
@@ -555,11 +682,15 @@ function openProduct(id){
 
       </div>
     `;
+
   });
 
   updateAddButton();
 
   modal.classList.remove("hidden");
+
+  cartButton.style.display = "none";
+
 }
 
 function changeQty(skuId,delta){
@@ -585,6 +716,7 @@ function changeQty(skuId,delta){
   }
 
   updateAddButton();
+
 }
 
 function updateAddButton(){
@@ -599,7 +731,8 @@ function updateAddButton(){
   document.getElementById(
     "addToCartBtn"
   ).innerText =
-    `加入意愿单（${total}件）`;
+    `更新意愿单（${total}件）`;
+
 }
 
 document.getElementById("addToCartBtn")
@@ -610,25 +743,33 @@ document.getElementById("addToCartBtn")
     const qty =
       selectedQuantities[variant.skuId];
 
-    if(qty > 0){
+    const existIndex = cart.findIndex(
+      item => item.skuId === variant.skuId
+    );
 
-      const exist = cart.find(
-        item=>item.skuId===variant.skuId
-      );
+    if(qty <= 0){
 
-      if(exist){
+      if(existIndex > -1){
+        cart.splice(existIndex,1);
+      }
 
-        exist.quantity += qty;
+    }else{
+
+      if(existIndex > -1){
+
+        cart[existIndex].quantity = qty;
 
       }else{
 
         cart.push({
+
           skuId:variant.skuId,
           name:currentProduct.name,
           flavor:variant.flavor,
           spec:variant.spec,
           price:variant.price,
           quantity:qty
+
         });
 
       }
@@ -638,10 +779,49 @@ document.getElementById("addToCartBtn")
   });
 
   saveCart();
+
   renderCart();
 
   modal.classList.add("hidden");
+
+  cartButton.style.display = "block";
+
 });
+
+function changeCartQty(skuId,delta){
+
+  const item =
+    cart.find(i=>i.skuId===skuId);
+
+  if(!item) return;
+
+  item.quantity += delta;
+
+  if(item.quantity <= 0){
+
+    cart = cart.filter(
+      i=>i.skuId!==skuId
+    );
+
+  }
+
+  saveCart();
+
+  renderCart();
+
+}
+
+function removeCartItem(skuId){
+
+  cart = cart.filter(
+    item=>item.skuId!==skuId
+  );
+
+  saveCart();
+
+  renderCart();
+
+}
 
 searchInput.addEventListener(
   "input",
@@ -662,6 +842,7 @@ categoryButtons.forEach(btn=>{
       btn.dataset.category;
 
     renderProducts();
+
   });
 
 });
@@ -670,6 +851,8 @@ cartButton.addEventListener("click",()=>{
 
   cartDrawer.classList.remove("hidden");
 
+  cartButton.style.display = "none";
+
 });
 
 document.getElementById("closeDrawer")
@@ -677,12 +860,16 @@ document.getElementById("closeDrawer")
 
   cartDrawer.classList.add("hidden");
 
+  cartButton.style.display = "block";
+
 });
 
 document.getElementById("closeModal")
 .addEventListener("click",()=>{
 
   modal.classList.add("hidden");
+
+  cartButton.style.display = "block";
 
 });
 
@@ -702,6 +889,7 @@ document.getElementById("copyCart")
 });
 
 renderProducts();
+
 renderCart();
 
 </script>
