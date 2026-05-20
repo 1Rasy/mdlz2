@@ -188,13 +188,16 @@ body{
   border:none;
   background:none;
   font-size:28px;
+  cursor:pointer;
+  outline:none;
+  -webkit-tap-highlight-color:transparent;
 }
 
 .modal-image{
   width:100%;
   max-height:35vh;
   object-fit:contain;
-  background:#eee;
+  background:white;
 }
 
 .modal-body{
