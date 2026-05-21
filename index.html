@@ -22,6 +22,8 @@ body{
   padding-bottom:120px;
 }
 
+/* 顶部 */
+
 .topbar{
   position:sticky;
   top:0;
@@ -62,6 +64,7 @@ body{
   border-radius:999px;
   cursor:pointer;
   white-space:nowrap;
+  flex-shrink:0;
 }
 
 .category-btn.active{
@@ -69,10 +72,12 @@ body{
   color:white;
 }
 
+/* 商品列表 */
+
 .product-grid{
   display:grid;
   grid-template-columns:repeat(2,1fr);
-  gap:16px;
+  gap:14px;
   padding:16px;
 }
 
@@ -122,6 +127,8 @@ body{
   cursor:pointer;
 }
 
+/* 意愿单浮动按钮 */
+
 .cart-floating{
   position:fixed;
   right:18px;
@@ -134,6 +141,8 @@ body{
   z-index:1000;
   box-shadow:0 4px 16px rgba(0,0,0,0.15);
 }
+
+/* 弹窗 */
 
 .modal,
 .drawer{
@@ -155,10 +164,13 @@ body{
   right:0;
   bottom:0;
   border-radius:24px 24px 0 0;
-  max-height:92vh;
+  height:92vh;
   display:flex;
   flex-direction:column;
+  overflow:hidden;
 }
+
+/* 头部 */
 
 .modal-header,
 .drawer-header{
@@ -169,7 +181,7 @@ body{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  padding:18px;
+  padding:16px 18px;
   border-bottom:1px solid #eee;
 }
 
@@ -181,30 +193,33 @@ body{
   cursor:pointer;
 }
 
-.modal-scroll{
-  overflow:auto;
-  flex:1;
-}
+/* 商品图 */
 
 .modal-image{
   width:100%;
-  height:300px;
+  height:200px;
   object-fit:cover;
   object-position:center;
   background:white;
-  padding:20px;
+  padding:12px 40px;
+  flex-shrink:0;
 }
 
+/* SKU区域 */
+
 .modal-body{
+  flex:1;
+  overflow:auto;
   padding:20px;
   padding-bottom:120px;
+  min-height:0;
 }
 
 .variant-item{
   border:1px solid #ddd;
   border-radius:18px;
-  padding:16px;
-  margin-top:14px;
+  padding:14px;
+  margin-top:12px;
   transition:0.2s;
   cursor:pointer;
 }
@@ -222,7 +237,7 @@ body{
 }
 
 .variant-name{
-  font-size:15px;
+  font-size:14px;
   flex:1;
   line-height:1.5;
 }
@@ -230,7 +245,7 @@ body{
 .qty-box{
   display:flex;
   align-items:center;
-  gap:12px;
+  gap:10px;
 }
 
 .qty-btn{
@@ -252,6 +267,8 @@ body{
   font-size:18px;
 }
 
+/* 底部按钮 */
+
 .modal-footer{
   position:sticky;
   bottom:0;
@@ -269,9 +286,11 @@ body{
   padding:18px;
   border-radius:18px;
   cursor:pointer;
-  font-size:17px;
+  font-size:16px;
   font-weight:600;
 }
+
+/* 意愿单 */
 
 .cart-items{
   flex:1;
@@ -280,16 +299,16 @@ body{
 
 .cart-item{
   display:flex;
-  gap:14px;
+  gap:10px;
   align-items:center;
-  padding:18px;
+  padding:12px 14px;
   border-bottom:1px solid #eee;
 }
 
 .cart-image{
-  width:72px;
-  height:72px;
-  border-radius:14px;
+  width:52px;
+  height:52px;
+  border-radius:10px;
   object-fit:cover;
   background:#f5f5f5;
   flex-shrink:0;
@@ -301,41 +320,42 @@ body{
 
 .cart-title{
   font-weight:600;
-  line-height:1.4;
+  line-height:1.2;
+  font-size:14px;
 }
 
 .cart-sub{
-  color:#666;
-  font-size:14px;
-  margin-top:6px;
+  color:#777;
+  font-size:12px;
+  margin-top:2px;
 }
 
 .cart-bottom{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin-top:12px;
+  margin-top:6px;
 }
 
 .cart-qty{
   color:#4B2E83;
   font-weight:700;
-  font-size:16px;
+  font-size:14px;
 }
 
 .cart-actions{
   display:flex;
-  gap:10px;
+  gap:8px;
 }
 
 .cart-btn{
-  width:42px;
-  height:42px;
+  width:32px;
+  height:32px;
   border:none;
   background:#eef1f4;
-  border-radius:12px;
+  border-radius:10px;
   cursor:pointer;
-  font-size:22px;
+  font-size:18px;
   font-weight:700;
   color:#3178d4;
 }
@@ -357,25 +377,20 @@ body{
 
   <div class="category-bar">
 
-    <button
-      class="category-btn active"
-      data-category="全部"
-    >
+    <button class="category-btn active" data-category="全部">
       全部
     </button>
 
-    <button
-      class="category-btn"
-      data-category="饼干"
-    >
+    <button class="category-btn" data-category="饼干">
       饼干
     </button>
 
-    <button
-      class="category-btn"
-      data-category="口香糖"
-    >
-      口香糖
+    <button class="category-btn" data-category="零食">
+      零食
+    </button>
+
+    <button class="category-btn" data-category="糖果">
+      糖果
     </button>
 
   </div>
@@ -394,6 +409,8 @@ body{
   意愿单（<span id="cartCount">0</span>）
 </div>
 
+<!-- 商品详情 -->
+
 <div
   class="modal hidden"
   id="productModal"
@@ -411,18 +428,14 @@ body{
 
     </div>
 
-    <div class="modal-scroll">
+    <img
+      id="modalImage"
+      class="modal-image"
+    >
 
-      <img
-        id="modalImage"
-        class="modal-image"
-      >
+    <div class="modal-body">
 
-      <div class="modal-body">
-
-        <div id="variantContainer"></div>
-
-      </div>
+      <div id="variantContainer"></div>
 
     </div>
 
@@ -440,6 +453,8 @@ body{
   </div>
 
 </div>
+
+<!-- 意愿单 -->
 
 <div
   class="drawer hidden"
@@ -480,38 +495,72 @@ body{
 
 <script>
 
+/* 商品数据 */
+
 const products = [
 
 {
   id:1,
   name:"奥利奥夹心饼干",
   category:"饼干",
-  image:"images/1.jpg",
+  image:"images/奥利奥夹心白桃乌龙味97g-正面.jpg",
 
   variants:[
 
     {
-      skuId:"oreo1",
-      flavor:"原味",
-      spec:"97g",
-      price:4.8,
-      image:"images/1.jpg"
-    },
-
-    {
-      skuId:"oreo2",
-      flavor:"草莓味",
+      skuId:"oreo_btwl_97",
+      flavor:"白桃乌龙味",
       spec:"97g",
       price:5.2,
-      image:"images/2.jpg"
+      image:"images/奥利奥夹心白桃乌龙味97g-正面.jpg"
     },
 
     {
-      skuId:"oreo3",
-      flavor:"巧克力味",
-      spec:"118g",
-      price:6.5,
-      image:"images/3.jpg"
+      skuId:"oreo_srn_97",
+      flavor:"醇正酸奶味",
+      spec:"97g",
+      price:5.2,
+      image:"images/奥利奥夹心醇正酸奶味97克-正面.jpg"
+    },
+
+    {
+      skuId:"oreo_srn_194",
+      flavor:"醇正酸奶味",
+      spec:"194g",
+      price:9.9,
+      image:"images/奥利奥夹心醇正酸奶味194克-正面.jpg"
+    },
+
+    {
+      skuId:"oreo_srn_388",
+      flavor:"醇正酸奶味",
+      spec:"388g",
+      price:18.8,
+      image:"images/奥利奥夹心醇正酸奶味388g-正面.jpg"
+    },
+
+    {
+      skuId:"oreo_btwl_194",
+      flavor:"白桃乌龙味",
+      spec:"194g",
+      price:9.9,
+      image:"images/奥利奥白桃乌龙味194g-正面.jpg"
+    },
+
+    {
+      skuId:"oreo_btwl_388",
+      flavor:"白桃乌龙味",
+      spec:"388g",
+      price:18.8,
+      image:"images/奥利奥白桃乌龙味388g-正面.jpg"
+    },
+
+    {
+      skuId:"oreo_cake_388",
+      flavor:"生日蛋糕味",
+      spec:"388g",
+      price:18.8,
+      image:"images/奥利奥生日蛋糕味388g-正面.jpg"
     }
 
   ]
@@ -519,32 +568,128 @@ const products = [
 
 {
   id:2,
-  name:"炫迈口香糖",
-  category:"口香糖",
-  image:"images/5.jpg",
+  name:"可可酥",
+  category:"零食",
+  image:"images/可可酥巧克力.jpg",
 
   variants:[
 
     {
-      skuId:"xm1",
-      flavor:"薄荷味",
-      spec:"35粒",
-      price:7.5,
-      image:"images/6.jpg"
+      skuId:"kks_chocolate",
+      flavor:"巧克力味",
+      spec:"散装",
+      price:6.5,
+      image:"images/可可酥巧克力.jpg"
     },
 
     {
-      skuId:"xm2",
+      skuId:"kks_strawberry",
+      flavor:"草莓味",
+      spec:"散装",
+      price:6.5,
+      image:"images/可可酥草莓.jpg"
+    },
+
+    {
+      skuId:"kks_peach",
+      flavor:"蜜桃味",
+      spec:"散装",
+      price:6.5,
+      image:"images/可可酥蜜桃.jpg"
+    },
+
+    {
+      skuId:"kks_vanilla",
+      flavor:"香草味",
+      spec:"散装",
+      price:6.5,
+      image:"images/可可酥香草.jpg"
+    }
+
+  ]
+},
+
+{
+  id:3,
+  name:"维果C 条装糖",
+  category:"糖果",
+  image:"images/维果C34G什果单条装-top-v1.jpg",
+
+  variants:[
+
+    {
+      skuId:"vg_mix",
+      flavor:"什果味",
+      spec:"34g",
+      price:3.5,
+      image:"images/维果C34G什果单条装-top-v1.jpg"
+    },
+
+    {
+      skuId:"vg_grapefruit",
+      flavor:"西柚味",
+      spec:"34g",
+      price:3.5,
+      image:"images/维果C34G西柚单条装-top-v2.jpg"
+    },
+
+    {
+      skuId:"vg_lime",
       flavor:"青柠味",
-      spec:"35粒",
-      price:7.8,
-      image:"images/7.jpg"
+      spec:"34g",
+      price:3.5,
+      image:"images/维果C34G青柠单条装-top-v1.jpg"
+    }
+
+  ]
+},
+
+{
+  id:4,
+  name:"荷氏薄荷糖",
+  category:"糖果",
+  image:"images/荷氏34G特强单条装-top-v1.jpg",
+
+  variants:[
+
+    {
+      skuId:"hs_super",
+      flavor:"特强薄荷味",
+      spec:"34g",
+      price:3.5,
+      image:"images/荷氏34G特强单条装-top-v1.jpg"
+    },
+
+    {
+      skuId:"hs_blueberry",
+      flavor:"蓝莓味",
+      spec:"34g",
+      price:3.5,
+      image:"images/荷氏34G蓝莓条装-top-v1.jpg"
+    },
+
+    {
+      skuId:"hs_lemon",
+      flavor:"柠檬香蜜味",
+      spec:"34g",
+      price:3.5,
+      image:"images/荷氏34G柠檬香蜜条装-top-v1.jpg"
+    },
+
+    {
+      skuId:"hs_storm",
+      flavor:"午夜风暴味",
+      spec:"34g",
+      price:3.5,
+      image:"images/荷氏34G午夜风暴单条装_top_v1.jpg"
     }
 
   ]
 }
 
 ];
+
+const STORAGE_KEY = "mdlz_cart_v3";
 
 const grid = document.getElementById("productGrid");
 const searchInput = document.getElementById("searchInput");
@@ -566,13 +711,13 @@ let selectedQuantities = {};
 let activeSkuId = null;
 
 let cart = JSON.parse(
-  localStorage.getItem("mdlz_cart") || "[]"
+  localStorage.getItem(STORAGE_KEY) || "[]"
 );
 
 function saveCart(){
 
   localStorage.setItem(
-    "mdlz_cart",
+    STORAGE_KEY,
     JSON.stringify(cart)
   );
 
