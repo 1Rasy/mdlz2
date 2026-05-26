@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
-
 <title>MONDELĒZ 商品目录</title>
 
 <style>
@@ -21,8 +20,6 @@ background:#f5f6f8;
 color:#222;
 padding-bottom:120px;
 }
-
-/* 顶部 */
 
 .topbar{
 position:sticky;
@@ -72,8 +69,6 @@ font-size:14px;
 background:#4B2E83;
 color:white;
 }
-
-/* 商品 */
 
 .product-grid{
 display:grid;
@@ -131,8 +126,6 @@ cursor:pointer;
 font-size:14px;
 }
 
-/* 意愿单按钮 */
-
 .cart-floating{
 position:fixed;
 right:18px;
@@ -146,8 +139,6 @@ z-index:1000;
 box-shadow:0 4px 16px rgba(0,0,0,0.15);
 font-size:14px;
 }
-
-/* 弹窗 */
 
 .modal,
 .drawer{
@@ -175,8 +166,6 @@ flex-direction:column;
 overflow:hidden;
 }
 
-/* 头部 */
-
 .modal-header,
 .drawer-header{
 position:sticky;
@@ -198,10 +187,8 @@ font-size:30px;
 cursor:pointer;
 }
 
-/* 商品详情图 */
-
 .modal-image-wrap{
-height:200px;
+height:180px;
 background:white;
 display:flex;
 align-items:center;
@@ -217,8 +204,6 @@ max-height:100%;
 object-fit:contain;
 transition:0.2s;
 }
-
-/* sku */
 
 .modal-body{
 flex:1;
@@ -279,8 +264,6 @@ font-weight:700;
 font-size:18px;
 }
 
-/* 底部 */
-
 .modal-footer{
 position:sticky;
 bottom:0;
@@ -302,8 +285,6 @@ font-weight:600;
 cursor:pointer;
 }
 
-/* 意愿单 */
-
 .cart-items{
 flex:1;
 overflow:auto;
@@ -313,13 +294,13 @@ overflow:auto;
 display:flex;
 gap:10px;
 align-items:center;
-padding:10px 14px;
+padding:8px 14px;
 border-bottom:1px solid #eee;
 }
 
 .cart-image{
-width:48px;
-height:48px;
+width:42px;
+height:42px;
 border-radius:10px;
 object-fit:contain;
 background:#f5f5f5;
@@ -332,13 +313,13 @@ flex:1;
 }
 
 .cart-title{
-font-size:14px;
+font-size:13px;
 font-weight:600;
-line-height:1.3;
+line-height:1.2;
 }
 
 .cart-sub{
-font-size:12px;
+font-size:11px;
 color:#777;
 margin-top:2px;
 }
@@ -347,11 +328,11 @@ margin-top:2px;
 display:flex;
 justify-content:space-between;
 align-items:center;
-margin-top:6px;
+margin-top:4px;
 }
 
 .cart-qty{
-font-size:14px;
+font-size:13px;
 font-weight:700;
 color:#4B2E83;
 }
@@ -362,8 +343,8 @@ gap:8px;
 }
 
 .cart-btn{
-width:30px;
-height:30px;
+width:28px;
+height:28px;
 border:none;
 background:#eef1f4;
 border-radius:10px;
@@ -382,19 +363,13 @@ cursor:pointer;
 
 <div class="logo">MONDELĒZ</div>
 
-<input
-type="text"
-id="searchInput"
-placeholder="搜索商品"
->
+<input type="text" id="searchInput" placeholder="搜索商品">
 
 <div class="category-bar">
-
 <button class="category-btn active" data-category="全部">全部</button>
 <button class="category-btn" data-category="饼干">饼干</button>
 <button class="category-btn" data-category="零食">零食</button>
 <button class="category-btn" data-category="糖果">糖果</button>
-
 </div>
 
 </header>
@@ -405,78 +380,48 @@ placeholder="搜索商品"
 意愿单（<span id="cartCount">0</span>）
 </div>
 
-<!-- 商品详情 -->
-
 <div class="modal hidden" id="productModal">
 
 <div class="modal-content">
 
 <div class="modal-header">
-
 <h3 id="modalTitle"></h3>
-
 <button id="closeModal">×</button>
-
 </div>
 
 <div class="modal-image-wrap">
-
-<img
-id="modalImage"
-class="modal-image"
->
-
+<img id="modalImage" class="modal-image">
 </div>
 
 <div class="modal-body">
-
 <div id="variantContainer"></div>
-
 </div>
 
 <div class="modal-footer">
-
-<button
-class="add-cart-btn"
-id="addToCartBtn"
->
+<button class="add-cart-btn" id="addToCartBtn">
 加入意愿单（0件）
 </button>
-
 </div>
 
 </div>
 
 </div>
-
-<!-- 意愿单 -->
 
 <div class="drawer hidden" id="cartDrawer">
 
 <div class="drawer-content">
 
 <div class="drawer-header">
-
 <h2>意愿单</h2>
-
 <button id="closeDrawer">×</button>
-
 </div>
 
-<div
-class="cart-items"
-id="cartItems"
-></div>
+<div class="cart-items" id="cartItems"></div>
 
 <div style="padding:20px;">
-
-<button
-class="copy-btn"
-id="copyCart"
->
+<button class="copy-btn" id="copyCart">
 复制意愿单
 </button>
-
 </div>
 
 </div>
@@ -500,8 +445,7 @@ skuId:"oreo_btwl_97",
 flavor:"白桃乌龙味",
 spec:"97g",
 price:5.2,
-image:"images/奥利奥夹心白桃乌龙味97g-正面.jpg",
-scale:1.35
+image:"images/奥利奥夹心白桃乌龙味97g-正面.jpg"
 },
 
 {
@@ -509,8 +453,7 @@ skuId:"oreo_srn_97",
 flavor:"醇正酸奶味",
 spec:"97g",
 price:5.2,
-image:"images/奥利奥夹心醇正酸奶味97克-正面.jpg",
-scale:1.35
+image:"images/奥利奥夹心醇正酸奶味97克-正面.jpg"
 },
 
 {
@@ -518,8 +461,7 @@ skuId:"oreo_srn_194",
 flavor:"醇正酸奶味",
 spec:"194g",
 price:9.9,
-image:"images/奥利奥夹心醇正酸奶味194克-正面.jpg",
-scale:1.15
+image:"images/奥利奥夹心醇正酸奶味194克-正面.jpg"
 },
 
 {
@@ -527,8 +469,7 @@ skuId:"oreo_srn_388",
 flavor:"醇正酸奶味",
 spec:"388g",
 price:18.8,
-image:"images/奥利奥夹心醇正酸奶味388g-正面.jpg",
-scale:1
+image:"images/奥利奥夹心醇正酸奶味388g-正面.jpg"
 },
 
 {
@@ -536,8 +477,7 @@ skuId:"oreo_btwl_194",
 flavor:"白桃乌龙味",
 spec:"194g",
 price:9.9,
-image:"images/奥利奥白桃乌龙味194g-正面.jpg",
-scale:1.15
+image:"images/奥利奥白桃乌龙味194g-正面.jpg"
 },
 
 {
@@ -545,8 +485,7 @@ skuId:"oreo_btwl_388",
 flavor:"白桃乌龙味",
 spec:"388g",
 price:18.8,
-image:"images/奥利奥白桃乌龙味388g-正面.jpg",
-scale:1
+image:"images/奥利奥白桃乌龙味388g-正面.jpg"
 },
 
 {
@@ -554,8 +493,7 @@ skuId:"oreo_cake_388",
 flavor:"生日蛋糕味",
 spec:"388g",
 price:18.8,
-image:"images/奥利奥生日蛋糕味388g-正面.jpg",
-scale:1
+image:"images/奥利奥生日蛋糕味388g-正面.jpg"
 }
 
 ]
@@ -575,8 +513,7 @@ skuId:"kks_chocolate",
 flavor:"巧克力味",
 spec:"散装",
 price:6.5,
-image:"images/可可酥巧克力.jpg",
-scale:1.2
+image:"images/可可酥巧克力.jpg"
 },
 
 {
@@ -584,8 +521,7 @@ skuId:"kks_strawberry",
 flavor:"草莓味",
 spec:"散装",
 price:6.5,
-image:"images/可可酥草莓.jpg",
-scale:1.2
+image:"images/可可酥草莓.jpg"
 },
 
 {
@@ -593,8 +529,7 @@ skuId:"kks_peach",
 flavor:"蜜桃味",
 spec:"散装",
 price:6.5,
-image:"images/可可酥蜜桃.jpg",
-scale:1.2
+image:"images/可可酥蜜桃.jpg"
 },
 
 {
@@ -602,8 +537,7 @@ skuId:"kks_vanilla",
 flavor:"香草味",
 spec:"散装",
 price:6.5,
-image:"images/可可酥香草.jpg",
-scale:1.2
+image:"images/可可酥香草.jpg"
 }
 
 ]
@@ -623,8 +557,7 @@ skuId:"vg_mix",
 flavor:"什果味",
 spec:"34g",
 price:3.5,
-image:"images/维果C34G什果单条装-top-v1.jpg",
-scale:1.45
+image:"images/维果C34G什果单条装-top-v1.jpg"
 },
 
 {
@@ -632,8 +565,7 @@ skuId:"vg_grapefruit",
 flavor:"西柚味",
 spec:"34g",
 price:3.5,
-image:"images/维果C34G西柚单条装-top-v2.jpg",
-scale:1.45
+image:"images/维果C34G西柚单条装-top-v2.jpg"
 },
 
 {
@@ -641,8 +573,7 @@ skuId:"vg_lime",
 flavor:"青柠味",
 spec:"34g",
 price:3.5,
-image:"images/维果C34G青柠单条装-top-v1.jpg",
-scale:1.45
+image:"images/维果C34G青柠单条装-top-v1.jpg"
 }
 
 ]
@@ -662,8 +593,7 @@ skuId:"hs_super",
 flavor:"特强薄荷味",
 spec:"34g",
 price:3.5,
-image:"images/荷氏34G特强单条装-top-v1.jpg",
-scale:1.45
+image:"images/荷氏34G特强单条装-top-v1.jpg"
 },
 
 {
@@ -671,8 +601,7 @@ skuId:"hs_blueberry",
 flavor:"蓝莓味",
 spec:"34g",
 price:3.5,
-image:"images/荷氏34G蓝莓条装-top-v1.jpg",
-scale:1.45
+image:"images/荷氏34G蓝莓条装-top-v1.jpg"
 },
 
 {
@@ -680,8 +609,7 @@ skuId:"hs_lemon",
 flavor:"柠檬香蜜味",
 spec:"34g",
 price:3.5,
-image:"images/荷氏34G柠檬香蜜条装-top-v1.jpg",
-scale:1.45
+image:"images/荷氏34G柠檬香蜜条装-top-v1.jpg"
 },
 
 {
@@ -689,8 +617,7 @@ skuId:"hs_storm",
 flavor:"午夜风暴味",
 spec:"34g",
 price:3.5,
-image:"images/荷氏34G午夜风暴单条装_top_v1.jpg",
-scale:1.45
+image:"images/荷氏34G午夜风暴单条装_top_v1.jpg"
 }
 
 ]
@@ -699,7 +626,18 @@ scale:1.45
 
 ];
 
-const STORAGE_KEY = "mdlz_cart_v5";
+function getImageScale(spec){
+
+if(spec.includes("97")) return 2;
+if(spec.includes("194")) return 1.5;
+if(spec.includes("34")) return 2;
+if(spec.includes("散装")) return 1.2;
+
+return 1;
+
+}
+
+const STORAGE_KEY = "mdlz_cart_v6";
 
 const grid = document.getElementById("productGrid");
 const searchInput = document.getElementById("searchInput");
@@ -724,12 +662,10 @@ localStorage.getItem(STORAGE_KEY) || "[]"
 );
 
 function saveCart(){
-
 localStorage.setItem(
 STORAGE_KEY,
 JSON.stringify(cart)
 );
-
 }
 
 function renderProducts(){
@@ -898,7 +834,7 @@ if(index === 0){
 modalImage.src = variant.image;
 
 modalImage.style.transform =
-`scale(${variant.scale || 1})`;
+`scale(${getImageScale(variant.spec)})`;
 
 }
 
@@ -984,7 +920,7 @@ v=>v.skuId===skuId
 modalImage.src = variant.image;
 
 modalImage.style.transform =
-`scale(${variant.scale || 1})`;
+`scale(${getImageScale(variant.spec)})`;
 
 }
 
@@ -1164,7 +1100,6 @@ alert("已复制意愿单");
 });
 
 renderProducts();
-
 renderCart();
 
 </script>
