@@ -1,371 +1,376 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
 
 <title>MONDELĒZ 商品目录</title>
 
 <style>
 
 *{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
+margin:0;
+padding:0;
+box-sizing:border-box;
+-webkit-tap-highlight-color:transparent;
 }
 
 body{
-  font-family:"PingFang SC",sans-serif;
-  background:#f5f6f8;
-  color:#222;
-  padding-bottom:120px;
+font-family:"PingFang SC",sans-serif;
+background:#f5f6f8;
+color:#222;
+padding-bottom:120px;
 }
 
 /* 顶部 */
 
 .topbar{
-  position:sticky;
-  top:0;
-  z-index:100;
-  background:white;
-  padding:18px 16px 12px;
-  border-bottom:1px solid #eee;
+position:sticky;
+top:0;
+z-index:100;
+background:white;
+padding:18px 16px 12px;
+border-bottom:1px solid #eee;
 }
 
 .logo{
-  font-size:24px;
-  font-weight:700;
-  color:#4B2E83;
-  margin-bottom:14px;
+font-size:24px;
+font-weight:700;
+color:#4B2E83;
+margin-bottom:14px;
 }
 
 #searchInput{
-  width:100%;
-  border:none;
-  background:#f2f3f5;
-  padding:14px;
-  border-radius:16px;
-  outline:none;
-  font-size:15px;
+width:100%;
+border:none;
+background:#f2f3f5;
+padding:14px;
+border-radius:16px;
+outline:none;
+font-size:15px;
 }
 
 .category-bar{
-  display:flex;
-  gap:10px;
-  margin-top:14px;
-  overflow:auto;
+display:flex;
+gap:10px;
+margin-top:14px;
+overflow:auto;
 }
 
 .category-btn{
-  border:none;
-  background:#f2f3f5;
-  padding:10px 16px;
-  border-radius:999px;
-  cursor:pointer;
-  white-space:nowrap;
-  flex-shrink:0;
+border:none;
+background:#f2f3f5;
+padding:10px 16px;
+border-radius:999px;
+cursor:pointer;
+white-space:nowrap;
+flex-shrink:0;
+font-size:14px;
 }
 
 .category-btn.active{
-  background:#4B2E83;
-  color:white;
+background:#4B2E83;
+color:white;
 }
 
-/* 商品列表 */
+/* 商品 */
 
 .product-grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:14px;
-  padding:16px;
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:14px;
+padding:16px;
 }
 
 .card{
-  background:white;
-  border-radius:22px;
-  overflow:hidden;
-  box-shadow:0 2px 12px rgba(0,0,0,0.05);
+background:white;
+border-radius:22px;
+overflow:hidden;
+box-shadow:0 2px 12px rgba(0,0,0,0.05);
 }
 
 .card img{
-  width:100%;
-  aspect-ratio:1/1;
-  object-fit:cover;
+width:100%;
+aspect-ratio:1/1;
+object-fit:contain;
+background:white;
+padding:10px;
 }
 
 .card-body{
-  padding:14px;
+padding:14px;
 }
 
 .card-title{
-  font-size:15px;
-  font-weight:600;
-  line-height:1.4;
+font-size:15px;
+font-weight:600;
+line-height:1.4;
 }
 
 .card-sub{
-  color:#888;
-  font-size:13px;
-  margin-top:6px;
+color:#888;
+font-size:13px;
+margin-top:6px;
 }
 
 .price{
-  font-size:24px;
-  font-weight:700;
-  margin-top:10px;
+font-size:24px;
+font-weight:700;
+margin-top:10px;
 }
 
 .open-btn{
-  width:100%;
-  margin-top:14px;
-  border:none;
-  background:#4B2E83;
-  color:white;
-  padding:12px;
-  border-radius:14px;
-  cursor:pointer;
+width:100%;
+margin-top:14px;
+border:none;
+background:#4B2E83;
+color:white;
+padding:12px;
+border-radius:14px;
+cursor:pointer;
+font-size:14px;
 }
 
-/* 意愿单浮动按钮 */
+/* 意愿单按钮 */
 
 .cart-floating{
-  position:fixed;
-  right:18px;
-  bottom:20px;
-  background:#4B2E83;
-  color:white;
-  padding:14px 18px;
-  border-radius:999px;
-  cursor:pointer;
-  z-index:1000;
-  box-shadow:0 4px 16px rgba(0,0,0,0.15);
+position:fixed;
+right:18px;
+bottom:20px;
+background:#4B2E83;
+color:white;
+padding:14px 18px;
+border-radius:999px;
+cursor:pointer;
+z-index:1000;
+box-shadow:0 4px 16px rgba(0,0,0,0.15);
+font-size:14px;
 }
 
 /* 弹窗 */
 
 .modal,
 .drawer{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.4);
-  z-index:9999;
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.4);
+z-index:9999;
 }
 
 .hidden{
-  display:none;
+display:none;
 }
 
 .modal-content,
 .drawer-content{
-  background:white;
-  position:absolute;
-  left:0;
-  right:0;
-  bottom:0;
-  border-radius:24px 24px 0 0;
-  height:92vh;
-  display:flex;
-  flex-direction:column;
-  overflow:hidden;
+background:white;
+position:absolute;
+left:0;
+right:0;
+bottom:0;
+height:92vh;
+border-radius:24px 24px 0 0;
+display:flex;
+flex-direction:column;
+overflow:hidden;
 }
 
 /* 头部 */
 
 .modal-header,
 .drawer-header{
-  position:sticky;
-  top:0;
-  z-index:20;
-  background:white;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:16px 18px;
-  border-bottom:1px solid #eee;
+position:sticky;
+top:0;
+z-index:20;
+background:white;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:16px 18px;
+border-bottom:1px solid #eee;
 }
 
 .modal-header button,
 .drawer-header button{
-  border:none;
-  background:none;
-  font-size:28px;
-  cursor:pointer;
+border:none;
+background:none;
+font-size:30px;
+cursor:pointer;
 }
 
-/* 商品图 */
+/* 商品详情图 */
+
+.modal-image-wrap{
+height:200px;
+background:white;
+display:flex;
+align-items:center;
+justify-content:center;
+overflow:hidden;
+flex-shrink:0;
+padding:10px;
+}
 
 .modal-image{
-
-  width:100%;
-
-  height:200px;
-
-  object-fit:contain;
-
-  object-position:center;
-
-  background:white;
-
-  padding:10px 20px;
-
-  flex-shrink:0;
-
+max-width:100%;
+max-height:100%;
+object-fit:contain;
+transition:0.2s;
 }
 
-/* SKU区域 */
+/* sku */
 
 .modal-body{
-  flex:1;
-  overflow:auto;
-  padding:20px;
-  padding-bottom:120px;
-  min-height:0;
+flex:1;
+overflow:auto;
+padding:18px;
+padding-bottom:120px;
 }
 
 .variant-item{
-  border:1px solid #ddd;
-  border-radius:18px;
-  padding:14px;
-  margin-top:12px;
-  transition:0.2s;
-  cursor:pointer;
+border:1px solid #ddd;
+border-radius:18px;
+padding:14px;
+margin-bottom:12px;
+transition:0.2s;
+cursor:pointer;
 }
 
 .variant-item.active{
-  border-color:#4B2E83;
-  background:#f6f1ff;
+border-color:#4B2E83;
+background:#f6f1ff;
 }
 
 .variant-top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:12px;
 }
 
 .variant-name{
-  font-size:14px;
-  flex:1;
-  line-height:1.5;
+font-size:14px;
+line-height:1.5;
+flex:1;
 }
 
 .qty-box{
-  display:flex;
-  align-items:center;
-  gap:10px;
+display:flex;
+align-items:center;
+gap:10px;
 }
 
 .qty-btn{
-  width:44px;
-  height:44px;
-  border:none;
-  background:#eef1f4;
-  border-radius:12px;
-  cursor:pointer;
-  font-size:22px;
-  font-weight:700;
-  color:#3178d4;
+width:42px;
+height:42px;
+border:none;
+background:#eef1f4;
+border-radius:12px;
+font-size:22px;
+font-weight:700;
+color:#3178d4;
+cursor:pointer;
 }
 
 .qty-number{
-  min-width:24px;
-  text-align:center;
-  font-weight:700;
-  font-size:18px;
+min-width:24px;
+text-align:center;
+font-weight:700;
+font-size:18px;
 }
 
-/* 底部按钮 */
+/* 底部 */
 
 .modal-footer{
-  position:sticky;
-  bottom:0;
-  background:white;
-  padding:16px 20px;
-  border-top:1px solid #eee;
+position:sticky;
+bottom:0;
+background:white;
+padding:16px 20px;
+border-top:1px solid #eee;
 }
 
 .add-cart-btn,
 .copy-btn{
-  width:100%;
-  border:none;
-  background:#4B2E83;
-  color:white;
-  padding:18px;
-  border-radius:18px;
-  cursor:pointer;
-  font-size:16px;
-  font-weight:600;
+width:100%;
+border:none;
+background:#4B2E83;
+color:white;
+padding:18px;
+border-radius:18px;
+font-size:16px;
+font-weight:600;
+cursor:pointer;
 }
 
 /* 意愿单 */
 
 .cart-items{
-  flex:1;
-  overflow:auto;
+flex:1;
+overflow:auto;
 }
 
 .cart-item{
-  display:flex;
-  gap:10px;
-  align-items:center;
-  padding:12px 14px;
-  border-bottom:1px solid #eee;
+display:flex;
+gap:10px;
+align-items:center;
+padding:10px 14px;
+border-bottom:1px solid #eee;
 }
 
 .cart-image{
-  width:52px;
-  height:52px;
-  border-radius:10px;
-  object-fit:cover;
-  background:#f5f5f5;
-  flex-shrink:0;
+width:48px;
+height:48px;
+border-radius:10px;
+object-fit:contain;
+background:#f5f5f5;
+padding:4px;
+flex-shrink:0;
 }
 
 .cart-info{
-  flex:1;
+flex:1;
 }
 
 .cart-title{
-  font-weight:600;
-  line-height:1.2;
-  font-size:14px;
+font-size:14px;
+font-weight:600;
+line-height:1.3;
 }
 
 .cart-sub{
-  color:#777;
-  font-size:12px;
-  margin-top:2px;
+font-size:12px;
+color:#777;
+margin-top:2px;
 }
 
 .cart-bottom{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-top:6px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-top:6px;
 }
 
 .cart-qty{
-  color:#4B2E83;
-  font-weight:700;
-  font-size:14px;
+font-size:14px;
+font-weight:700;
+color:#4B2E83;
 }
 
 .cart-actions{
-  display:flex;
-  gap:8px;
+display:flex;
+gap:8px;
 }
 
 .cart-btn{
-  width:32px;
-  height:32px;
-  border:none;
-  background:#eef1f4;
-  border-radius:10px;
-  cursor:pointer;
-  font-size:18px;
-  font-weight:700;
-  color:#3178d4;
+width:30px;
+height:30px;
+border:none;
+background:#eef1f4;
+border-radius:10px;
+font-size:18px;
+font-weight:700;
+color:#3178d4;
+cursor:pointer;
 }
 
 </style>
@@ -375,329 +380,326 @@ body{
 
 <header class="topbar">
 
-  <div class="logo">MONDELĒZ</div>
+<div class="logo">MONDELĒZ</div>
 
-  <input
-    type="text"
-    id="searchInput"
-    placeholder="搜索商品"
-  >
+<input
+type="text"
+id="searchInput"
+placeholder="搜索商品"
+>
 
-  <div class="category-bar">
+<div class="category-bar">
 
-    <button class="category-btn active" data-category="全部">
-      全部
-    </button>
+<button class="category-btn active" data-category="全部">全部</button>
+<button class="category-btn" data-category="饼干">饼干</button>
+<button class="category-btn" data-category="零食">零食</button>
+<button class="category-btn" data-category="糖果">糖果</button>
 
-    <button class="category-btn" data-category="饼干">
-      饼干
-    </button>
-
-    <button class="category-btn" data-category="零食">
-      零食
-    </button>
-
-    <button class="category-btn" data-category="糖果">
-      糖果
-    </button>
-
-  </div>
+</div>
 
 </header>
 
-<main
-  class="product-grid"
-  id="productGrid"
-></main>
+<main class="product-grid" id="productGrid"></main>
 
-<div
-  class="cart-floating"
-  id="cartButton"
->
-  意愿单（<span id="cartCount">0</span>）
+<div class="cart-floating" id="cartButton">
+意愿单（<span id="cartCount">0</span>）
 </div>
 
 <!-- 商品详情 -->
 
-<div
-  class="modal hidden"
-  id="productModal"
+<div class="modal hidden" id="productModal">
+
+<div class="modal-content">
+
+<div class="modal-header">
+
+<h3 id="modalTitle"></h3>
+
+<button id="closeModal">×</button>
+
+</div>
+
+<div class="modal-image-wrap">
+
+<img
+id="modalImage"
+class="modal-image"
 >
 
-  <div class="modal-content">
+</div>
 
-    <div class="modal-header">
+<div class="modal-body">
 
-      <h3 id="modalTitle"></h3>
+<div id="variantContainer"></div>
 
-      <button id="closeModal">
-        ×
-      </button>
+</div>
 
-    </div>
+<div class="modal-footer">
 
-    <img
-      id="modalImage"
-      class="modal-image"
-    >
+<button
+class="add-cart-btn"
+id="addToCartBtn"
+>
+加入意愿单（0件）
+</button>
 
-    <div class="modal-body">
+</div>
 
-      <div id="variantContainer"></div>
-
-    </div>
-
-    <div class="modal-footer">
-
-      <button
-        class="add-cart-btn"
-        id="addToCartBtn"
-      >
-        加入意愿单（0件）
-      </button>
-
-    </div>
-
-  </div>
+</div>
 
 </div>
 
 <!-- 意愿单 -->
 
+<div class="drawer hidden" id="cartDrawer">
+
+<div class="drawer-content">
+
+<div class="drawer-header">
+
+<h2>意愿单</h2>
+
+<button id="closeDrawer">×</button>
+
+</div>
+
 <div
-  class="drawer hidden"
-  id="cartDrawer"
+class="cart-items"
+id="cartItems"
+></div>
+
+<div style="padding:20px;">
+
+<button
+class="copy-btn"
+id="copyCart"
 >
+复制意愿单
+</button>
 
-  <div class="drawer-content">
+</div>
 
-    <div class="drawer-header">
-
-      <h2>意愿单</h2>
-
-      <button id="closeDrawer">
-        ×
-      </button>
-
-    </div>
-
-    <div
-      class="cart-items"
-      id="cartItems"
-    ></div>
-
-    <div style="padding:20px;">
-
-      <button
-        class="copy-btn"
-        id="copyCart"
-      >
-        复制意愿单
-      </button>
-
-    </div>
-
-  </div>
+</div>
 
 </div>
 
 <script>
 
-/* 商品数据 */
-
 const products = [
 
 {
-  id:1,
-  name:"奥利奥夹心饼干",
-  category:"饼干",
-  image:"images/奥利奥夹心白桃乌龙味97g-正面.jpg",
+id:1,
+name:"奥利奥夹心饼干",
+category:"饼干",
+image:"images/奥利奥夹心白桃乌龙味97g-正面.jpg",
 
-  variants:[
+variants:[
 
-    {
-      skuId:"oreo_btwl_97",
-      flavor:"白桃乌龙味",
-      spec:"97g",
-      price:5.2,
-      image:"images/奥利奥夹心白桃乌龙味97g-正面.jpg"
-    },
-
-    {
-      skuId:"oreo_srn_97",
-      flavor:"醇正酸奶味",
-      spec:"97g",
-      price:5.2,
-      image:"images/奥利奥夹心醇正酸奶味97克-正面.jpg"
-    },
-
-    {
-      skuId:"oreo_srn_194",
-      flavor:"醇正酸奶味",
-      spec:"194g",
-      price:9.9,
-      image:"images/奥利奥夹心醇正酸奶味194克-正面.jpg"
-    },
-
-    {
-      skuId:"oreo_srn_388",
-      flavor:"醇正酸奶味",
-      spec:"388g",
-      price:18.8,
-      image:"images/奥利奥夹心醇正酸奶味388g-正面.jpg"
-    },
-
-    {
-      skuId:"oreo_btwl_194",
-      flavor:"白桃乌龙味",
-      spec:"194g",
-      price:9.9,
-      image:"images/奥利奥白桃乌龙味194g-正面.jpg"
-    },
-
-    {
-      skuId:"oreo_btwl_388",
-      flavor:"白桃乌龙味",
-      spec:"388g",
-      price:18.8,
-      image:"images/奥利奥白桃乌龙味388g-正面.jpg"
-    },
-
-    {
-      skuId:"oreo_cake_388",
-      flavor:"生日蛋糕味",
-      spec:"388g",
-      price:18.8,
-      image:"images/奥利奥生日蛋糕味388g-正面.jpg"
-    }
-
-  ]
+{
+skuId:"oreo_btwl_97",
+flavor:"白桃乌龙味",
+spec:"97g",
+price:5.2,
+image:"images/奥利奥夹心白桃乌龙味97g-正面.jpg",
+scale:1.35
 },
 
 {
-  id:2,
-  name:"可可酥",
-  category:"零食",
-  image:"images/可可酥巧克力.jpg",
-
-  variants:[
-
-    {
-      skuId:"kks_chocolate",
-      flavor:"巧克力味",
-      spec:"散装",
-      price:6.5,
-      image:"images/可可酥巧克力.jpg"
-    },
-
-    {
-      skuId:"kks_strawberry",
-      flavor:"草莓味",
-      spec:"散装",
-      price:6.5,
-      image:"images/可可酥草莓.jpg"
-    },
-
-    {
-      skuId:"kks_peach",
-      flavor:"蜜桃味",
-      spec:"散装",
-      price:6.5,
-      image:"images/可可酥蜜桃.jpg"
-    },
-
-    {
-      skuId:"kks_vanilla",
-      flavor:"香草味",
-      spec:"散装",
-      price:6.5,
-      image:"images/可可酥香草.jpg"
-    }
-
-  ]
+skuId:"oreo_srn_97",
+flavor:"醇正酸奶味",
+spec:"97g",
+price:5.2,
+image:"images/奥利奥夹心醇正酸奶味97克-正面.jpg",
+scale:1.35
 },
 
 {
-  id:3,
-  name:"维果C 条装糖",
-  category:"糖果",
-  image:"images/维果C34G什果单条装-top-v1.jpg",
-
-  variants:[
-
-    {
-      skuId:"vg_mix",
-      flavor:"什果味",
-      spec:"34g",
-      price:3.5,
-      image:"images/维果C34G什果单条装-top-v1.jpg"
-    },
-
-    {
-      skuId:"vg_grapefruit",
-      flavor:"西柚味",
-      spec:"34g",
-      price:3.5,
-      image:"images/维果C34G西柚单条装-top-v2.jpg"
-    },
-
-    {
-      skuId:"vg_lime",
-      flavor:"青柠味",
-      spec:"34g",
-      price:3.5,
-      image:"images/维果C34G青柠单条装-top-v1.jpg"
-    }
-
-  ]
+skuId:"oreo_srn_194",
+flavor:"醇正酸奶味",
+spec:"194g",
+price:9.9,
+image:"images/奥利奥夹心醇正酸奶味194克-正面.jpg",
+scale:1.15
 },
 
 {
-  id:4,
-  name:"荷氏薄荷糖",
-  category:"糖果",
-  image:"images/荷氏34G特强单条装-top-v1.jpg",
+skuId:"oreo_srn_388",
+flavor:"醇正酸奶味",
+spec:"388g",
+price:18.8,
+image:"images/奥利奥夹心醇正酸奶味388g-正面.jpg",
+scale:1
+},
 
-  variants:[
+{
+skuId:"oreo_btwl_194",
+flavor:"白桃乌龙味",
+spec:"194g",
+price:9.9,
+image:"images/奥利奥白桃乌龙味194g-正面.jpg",
+scale:1.15
+},
 
-    {
-      skuId:"hs_super",
-      flavor:"特强薄荷味",
-      spec:"34g",
-      price:3.5,
-      image:"images/荷氏34G特强单条装-top-v1.jpg"
-    },
+{
+skuId:"oreo_btwl_388",
+flavor:"白桃乌龙味",
+spec:"388g",
+price:18.8,
+image:"images/奥利奥白桃乌龙味388g-正面.jpg",
+scale:1
+},
 
-    {
-      skuId:"hs_blueberry",
-      flavor:"蓝莓味",
-      spec:"34g",
-      price:3.5,
-      image:"images/荷氏34G蓝莓条装-top-v1.jpg"
-    },
+{
+skuId:"oreo_cake_388",
+flavor:"生日蛋糕味",
+spec:"388g",
+price:18.8,
+image:"images/奥利奥生日蛋糕味388g-正面.jpg",
+scale:1
+}
 
-    {
-      skuId:"hs_lemon",
-      flavor:"柠檬香蜜味",
-      spec:"34g",
-      price:3.5,
-      image:"images/荷氏34G柠檬香蜜条装-top-v1.jpg"
-    },
+]
 
-    {
-      skuId:"hs_storm",
-      flavor:"午夜风暴味",
-      spec:"34g",
-      price:3.5,
-      image:"images/荷氏34G午夜风暴单条装_top_v1.jpg"
-    }
+},
 
-  ]
+{
+id:2,
+name:"可可酥",
+category:"零食",
+image:"images/可可酥巧克力.jpg",
+
+variants:[
+
+{
+skuId:"kks_chocolate",
+flavor:"巧克力味",
+spec:"散装",
+price:6.5,
+image:"images/可可酥巧克力.jpg",
+scale:1.2
+},
+
+{
+skuId:"kks_strawberry",
+flavor:"草莓味",
+spec:"散装",
+price:6.5,
+image:"images/可可酥草莓.jpg",
+scale:1.2
+},
+
+{
+skuId:"kks_peach",
+flavor:"蜜桃味",
+spec:"散装",
+price:6.5,
+image:"images/可可酥蜜桃.jpg",
+scale:1.2
+},
+
+{
+skuId:"kks_vanilla",
+flavor:"香草味",
+spec:"散装",
+price:6.5,
+image:"images/可可酥香草.jpg",
+scale:1.2
+}
+
+]
+
+},
+
+{
+id:3,
+name:"维果C 条装糖",
+category:"糖果",
+image:"images/维果C34G什果单条装-top-v1.jpg",
+
+variants:[
+
+{
+skuId:"vg_mix",
+flavor:"什果味",
+spec:"34g",
+price:3.5,
+image:"images/维果C34G什果单条装-top-v1.jpg",
+scale:1.45
+},
+
+{
+skuId:"vg_grapefruit",
+flavor:"西柚味",
+spec:"34g",
+price:3.5,
+image:"images/维果C34G西柚单条装-top-v2.jpg",
+scale:1.45
+},
+
+{
+skuId:"vg_lime",
+flavor:"青柠味",
+spec:"34g",
+price:3.5,
+image:"images/维果C34G青柠单条装-top-v1.jpg",
+scale:1.45
+}
+
+]
+
+},
+
+{
+id:4,
+name:"荷氏薄荷糖",
+category:"糖果",
+image:"images/荷氏34G特强单条装-top-v1.jpg",
+
+variants:[
+
+{
+skuId:"hs_super",
+flavor:"特强薄荷味",
+spec:"34g",
+price:3.5,
+image:"images/荷氏34G特强单条装-top-v1.jpg",
+scale:1.45
+},
+
+{
+skuId:"hs_blueberry",
+flavor:"蓝莓味",
+spec:"34g",
+price:3.5,
+image:"images/荷氏34G蓝莓条装-top-v1.jpg",
+scale:1.45
+},
+
+{
+skuId:"hs_lemon",
+flavor:"柠檬香蜜味",
+spec:"34g",
+price:3.5,
+image:"images/荷氏34G柠檬香蜜条装-top-v1.jpg",
+scale:1.45
+},
+
+{
+skuId:"hs_storm",
+flavor:"午夜风暴味",
+spec:"34g",
+price:3.5,
+image:"images/荷氏34G午夜风暴单条装_top_v1.jpg",
+scale:1.45
+}
+
+]
+
 }
 
 ];
 
-const STORAGE_KEY = "mdlz_cart_v3";
+const STORAGE_KEY = "mdlz_cart_v5";
 
 const grid = document.getElementById("productGrid");
 const searchInput = document.getElementById("searchInput");
@@ -716,453 +718,448 @@ const cartCount = document.getElementById("cartCount");
 let currentCategory = "全部";
 let currentProduct = null;
 let selectedQuantities = {};
-let activeSkuId = null;
 
 let cart = JSON.parse(
-  localStorage.getItem(STORAGE_KEY) || "[]"
+localStorage.getItem(STORAGE_KEY) || "[]"
 );
 
 function saveCart(){
 
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify(cart)
-  );
+localStorage.setItem(
+STORAGE_KEY,
+JSON.stringify(cart)
+);
 
 }
 
 function renderProducts(){
 
-  const keyword =
-    searchInput.value.toLowerCase();
+const keyword =
+searchInput.value.toLowerCase();
 
-  const filtered = products.filter(product=>{
+const filtered = products.filter(product=>{
 
-    const matchKeyword =
-      product.name.toLowerCase().includes(keyword);
+const matchKeyword =
+product.name.toLowerCase().includes(keyword);
 
-    const matchCategory =
-      currentCategory === "全部" ||
-      product.category === currentCategory;
+const matchCategory =
+currentCategory === "全部" ||
+product.category === currentCategory;
 
-    return matchKeyword && matchCategory;
+return matchKeyword && matchCategory;
 
-  });
+});
 
-  grid.innerHTML = "";
+grid.innerHTML = "";
 
-  filtered.forEach(product=>{
+filtered.forEach(product=>{
 
-    grid.innerHTML += `
+grid.innerHTML += `
 
-    <div class="card">
+<div class="card">
 
-      <img src="${product.image}">
+<img src="${product.image}">
 
-      <div class="card-body">
+<div class="card-body">
 
-        <div class="card-title">
-          ${product.name}
-        </div>
+<div class="card-title">
+${product.name}
+</div>
 
-        <div class="card-sub">
-          ${product.variants.length} 个规格
-        </div>
+<div class="card-sub">
+${product.variants.length} 个规格
+</div>
 
-        <div class="price">
-          ¥${product.variants[0].price}
-        </div>
+<div class="price">
+¥${product.variants[0].price}
+</div>
 
-        <button
-          class="open-btn"
-          onclick="openProduct(${product.id})"
-        >
-          查看商品
-        </button>
+<button
+class="open-btn"
+onclick="openProduct(${product.id})"
+>
+查看商品
+</button>
 
-      </div>
+</div>
 
-    </div>
+</div>
 
-    `;
+`;
 
-  });
+});
 
 }
 
 function renderCart(){
 
-  let total = 0;
+let total = 0;
 
-  cart.forEach(item=>{
-    total += item.quantity;
-  });
+cart.forEach(item=>{
+total += item.quantity;
+});
 
-  cartCount.innerText = total;
+cartCount.innerText = total;
 
-  cartItems.innerHTML = "";
+cartItems.innerHTML = "";
 
-  if(cart.length === 0){
+if(cart.length === 0){
 
-    cartItems.innerHTML = `
-      <div style="
-        padding:40px;
-        text-align:center;
-        color:#999;
-      ">
-        意愿单为空
-      </div>
-    `;
+cartItems.innerHTML = `
+<div style="padding:40px;text-align:center;color:#999;">
+意愿单为空
+</div>
+`;
 
-    return;
-  }
+return;
 
-  cart.forEach(item=>{
+}
 
-    cartItems.innerHTML += `
+cart.forEach(item=>{
 
-    <div class="cart-item">
+cartItems.innerHTML += `
 
-      <img
-        class="cart-image"
-        src="${item.image}"
-      >
+<div class="cart-item">
 
-      <div class="cart-info">
+<img
+class="cart-image"
+src="${item.image}"
+>
 
-        <div class="cart-title">
-          ${item.name}
-        </div>
+<div class="cart-info">
 
-        <div class="cart-sub">
-          ${item.flavor} ｜ ${item.spec}
-        </div>
+<div class="cart-title">
+${item.name}
+</div>
 
-        <div class="cart-bottom">
+<div class="cart-sub">
+${item.flavor} ｜ ${item.spec}
+</div>
 
-          <div class="cart-qty">
-            × ${item.quantity}
-          </div>
+<div class="cart-bottom">
 
-          <div class="cart-actions">
+<div class="cart-qty">
+× ${item.quantity}
+</div>
 
-            <button
-              class="cart-btn"
-              onclick="changeCartQty('${item.skuId}',-1)"
-            >
-              −
-            </button>
+<div class="cart-actions">
 
-            <button
-              class="cart-btn"
-              onclick="changeCartQty('${item.skuId}',1)"
-            >
-              +
-            </button>
+<button
+class="cart-btn"
+onclick="changeCartQty('${item.skuId}',-1)"
+>
+−
+</button>
 
-          </div>
+<button
+class="cart-btn"
+onclick="changeCartQty('${item.skuId}',1)"
+>
++
+</button>
 
-        </div>
+</div>
 
-      </div>
+</div>
 
-    </div>
+</div>
 
-    `;
+</div>
 
-  });
+`;
+
+});
 
 }
 
 function openProduct(id){
 
-  currentProduct =
-    products.find(p=>p.id===id);
+currentProduct =
+products.find(p=>p.id===id);
 
-  modalTitle.innerText =
-    currentProduct.name;
+modalTitle.innerText =
+currentProduct.name;
 
-  activeSkuId =
-    currentProduct.variants[0].skuId;
+variantContainer.innerHTML = "";
 
-  modalImage.src =
-    currentProduct.variants[0].image;
+selectedQuantities = {};
 
-  variantContainer.innerHTML = "";
+currentProduct.variants.forEach((variant,index)=>{
 
-  selectedQuantities = {};
+const exist = cart.find(
+item=>item.skuId===variant.skuId
+);
 
-  currentProduct.variants.forEach((variant,index)=>{
+selectedQuantities[variant.skuId] =
+exist ? exist.quantity : 0;
 
-    const exist = cart.find(
-      item=>item.skuId===variant.skuId
-    );
+if(index === 0){
 
-    selectedQuantities[variant.skuId] =
-      exist ? exist.quantity : 0;
+modalImage.src = variant.image;
 
-    const activeClass =
-      index===0 ? "active" : "";
+modalImage.style.transform =
+`scale(${variant.scale || 1})`;
 
-    variantContainer.innerHTML += `
+}
 
-    <div
-      class="variant-item ${activeClass}"
-      id="variant-${variant.skuId}"
-      onclick="selectVariant('${variant.skuId}')"
-    >
+variantContainer.innerHTML += `
 
-      <div class="variant-top">
+<div
+class="variant-item ${index===0 ? "active" : ""}"
+id="variant-${variant.skuId}"
+onclick="selectVariant('${variant.skuId}')"
+>
 
-        <div class="variant-name">
+<div class="variant-top">
 
-          ${variant.flavor}
-          ｜ ${variant.spec}
-          ｜ ¥${variant.price}
+<div class="variant-name">
 
-        </div>
+${variant.flavor}
+｜ ${variant.spec}
+｜ ¥${variant.price}
 
-        <div
-          class="qty-box"
-          onclick="event.stopPropagation()"
-        >
+</div>
 
-          <button
-            class="qty-btn"
-            onclick="changeQty('${variant.skuId}',-1)"
-          >
-            −
-          </button>
+<div
+class="qty-box"
+onclick="event.stopPropagation()"
+>
 
-          <span
-            class="qty-number"
-            id="qty-${variant.skuId}"
-          >
-            ${selectedQuantities[variant.skuId]}
-          </span>
+<button
+class="qty-btn"
+onclick="changeQty('${variant.skuId}',-1)"
+>
+−
+</button>
 
-          <button
-            class="qty-btn"
-            onclick="changeQty('${variant.skuId}',1)"
-          >
-            +
-          </button>
+<span
+class="qty-number"
+id="qty-${variant.skuId}"
+>
+${selectedQuantities[variant.skuId]}
+</span>
 
-        </div>
+<button
+class="qty-btn"
+onclick="changeQty('${variant.skuId}',1)"
+>
++
+</button>
 
-      </div>
+</div>
 
-    </div>
+</div>
 
-    `;
+</div>
 
-  });
+`;
 
-  updateAddButton();
+});
 
-  modal.classList.remove("hidden");
+updateAddButton();
 
-  cartButton.style.display = "none";
+modal.classList.remove("hidden");
+
+cartButton.style.display = "none";
 
 }
 
 function selectVariant(skuId){
 
-  activeSkuId = skuId;
+document
+.querySelectorAll(".variant-item")
+.forEach(item=>{
+item.classList.remove("active");
+});
 
-  document
-    .querySelectorAll(".variant-item")
-    .forEach(item=>{
-      item.classList.remove("active");
-    });
+document
+.getElementById(`variant-${skuId}`)
+.classList.add("active");
 
-  document
-    .getElementById(`variant-${skuId}`)
-    .classList.add("active");
+const variant =
+currentProduct.variants.find(
+v=>v.skuId===skuId
+);
 
-  const variant =
-    currentProduct.variants.find(
-      v=>v.skuId===skuId
-    );
+modalImage.src = variant.image;
 
-  if(variant){
-    modalImage.src = variant.image;
-  }
+modalImage.style.transform =
+`scale(${variant.scale || 1})`;
 
 }
 
 function changeQty(skuId,delta){
 
-  selectedQuantities[skuId] += delta;
+selectedQuantities[skuId] += delta;
 
-  if(selectedQuantities[skuId] < 0){
-    selectedQuantities[skuId] = 0;
-  }
+if(selectedQuantities[skuId] < 0){
+selectedQuantities[skuId] = 0;
+}
 
-  document.getElementById(
-    `qty-${skuId}`
-  ).innerText =
-    selectedQuantities[skuId];
+document.getElementById(
+`qty-${skuId}`
+).innerText =
+selectedQuantities[skuId];
 
-  updateAddButton();
+updateAddButton();
 
 }
 
 function updateAddButton(){
 
-  let total = 0;
+let total = 0;
 
-  Object.values(selectedQuantities)
-  .forEach(q=>{
-    total += q;
-  });
+Object.values(selectedQuantities)
+.forEach(q=>{
+total += q;
+});
 
-  document.getElementById(
-    "addToCartBtn"
-  ).innerText =
-    `加入意愿单（${total}件）`;
+document.getElementById(
+"addToCartBtn"
+).innerText =
+`加入意愿单（${total}件）`;
 
 }
 
 document.getElementById("addToCartBtn")
 .addEventListener("click",()=>{
 
-  currentProduct.variants.forEach(variant=>{
+currentProduct.variants.forEach(variant=>{
 
-    const qty =
-      selectedQuantities[variant.skuId];
+const qty =
+selectedQuantities[variant.skuId];
 
-    const existIndex = cart.findIndex(
-      item=>item.skuId===variant.skuId
-    );
+const existIndex = cart.findIndex(
+item=>item.skuId===variant.skuId
+);
 
-    if(qty <= 0){
+if(qty <= 0){
 
-      if(existIndex > -1){
-        cart.splice(existIndex,1);
-      }
+if(existIndex > -1){
+cart.splice(existIndex,1);
+}
 
-    }else{
+}else{
 
-      if(existIndex > -1){
+if(existIndex > -1){
 
-        cart[existIndex].quantity = qty;
+cart[existIndex].quantity = qty;
 
-      }else{
+}else{
 
-        cart.push({
+cart.push({
 
-          skuId:variant.skuId,
-          name:currentProduct.name,
-          flavor:variant.flavor,
-          spec:variant.spec,
-          price:variant.price,
-          quantity:qty,
-          image:variant.image
+skuId:variant.skuId,
+name:currentProduct.name,
+flavor:variant.flavor,
+spec:variant.spec,
+price:variant.price,
+quantity:qty,
+image:variant.image
 
-        });
+});
 
-      }
+}
 
-    }
+}
 
-  });
+});
 
-  saveCart();
+saveCart();
 
-  renderCart();
+renderCart();
 
-  modal.classList.add("hidden");
+modal.classList.add("hidden");
 
-  cartButton.style.display = "block";
+cartButton.style.display = "block";
 
 });
 
 function changeCartQty(skuId,delta){
 
-  const item =
-    cart.find(i=>i.skuId===skuId);
+const item =
+cart.find(i=>i.skuId===skuId);
 
-  if(!item) return;
+if(!item) return;
 
-  item.quantity += delta;
+item.quantity += delta;
 
-  if(item.quantity <= 0){
+if(item.quantity <= 0){
 
-    cart = cart.filter(
-      i=>i.skuId!==skuId
-    );
+cart = cart.filter(
+i=>i.skuId!==skuId
+);
 
-  }
+}
 
-  saveCart();
+saveCart();
 
-  renderCart();
+renderCart();
 
 }
 
 searchInput.addEventListener(
-  "input",
-  renderProducts
+"input",
+renderProducts
 );
 
 categoryButtons.forEach(btn=>{
 
-  btn.addEventListener("click",()=>{
+btn.addEventListener("click",()=>{
 
-    categoryButtons.forEach(b=>{
-      b.classList.remove("active");
-    });
+categoryButtons.forEach(b=>{
+b.classList.remove("active");
+});
 
-    btn.classList.add("active");
+btn.classList.add("active");
 
-    currentCategory =
-      btn.dataset.category;
+currentCategory =
+btn.dataset.category;
 
-    renderProducts();
+renderProducts();
 
-  });
+});
 
 });
 
 cartButton.addEventListener("click",()=>{
 
-  cartDrawer.classList.remove("hidden");
+cartDrawer.classList.remove("hidden");
 
-  cartButton.style.display = "none";
+cartButton.style.display = "none";
 
 });
 
 document.getElementById("closeDrawer")
 .addEventListener("click",()=>{
 
-  cartDrawer.classList.add("hidden");
+cartDrawer.classList.add("hidden");
 
-  cartButton.style.display = "block";
+cartButton.style.display = "block";
 
 });
 
 document.getElementById("closeModal")
 .addEventListener("click",()=>{
 
-  modal.classList.add("hidden");
+modal.classList.add("hidden");
 
-  cartButton.style.display = "block";
+cartButton.style.display = "block";
 
 });
 
 document.getElementById("copyCart")
 .addEventListener("click",async()=>{
 
-  const text = cart.map(item=>{
+const text = cart.map(item=>{
 
-    return `${item.name} ${item.flavor} ${item.spec} × ${item.quantity}`;
+return `${item.name} ${item.flavor} ${item.spec} × ${item.quantity}`;
 
-  }).join("\n");
+}).join("\n");
 
-  await navigator.clipboard.writeText(text);
+await navigator.clipboard.writeText(text);
 
-  alert("已复制意愿单");
+alert("已复制意愿单");
 
 });
 
@@ -1174,3 +1171,4 @@ renderCart();
 
 </body>
 </html>
+```
